@@ -67,10 +67,12 @@
           }
         }
       ],
-      "expo-font"
+      "expo-font",
+      "expo-router"
     ],
     "experiments": {
-      "tsconfigPaths": true
+      "tsconfigPaths": true,
+      "typedRoutes": true
     }
   },
   "ignite": {
