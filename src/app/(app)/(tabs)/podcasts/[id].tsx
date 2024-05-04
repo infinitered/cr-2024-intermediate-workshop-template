@@ -1,58 +1,134 @@
-import React from "react"
-import * as Application from "expo-application"
-import { Linking, Platform, TextStyle, View, ViewStyle } from "react-native"
-import { Button, ListItem, Screen, Text } from "src/components"
-import { colors, spacing } from "src/theme"
-import { isRTL } from "src/i18n"
-import { useStores } from "src/models"
-import { useGlobalSearchParams } from "expo-router"
+import { observer } from "mobx-react-lite"
+import React, { useMemo } from "react"
+import {
+  Image,
+  ImageSourcePropType,
+  ImageStyle,
+  TextStyle,
+  View,
+  ViewStyle,
+  useWindowDimensions,
+} from "react-native"
+import { router, useGlobalSearchParams } from "expo-router"
+import RenderHtml from "react-native-render-html"
 
-export default function PodcastDetailScreen() {
+import { colors, spacing } from "src/theme"
+import { Screen, Button, Text } from "src/components"
+import { useStores } from "src/models"
+import { openLinkInBrowser } from "src/utils/openLinkInBrowser"
+import { useHeader } from "src/utils/useHeader"
+
+const rnrImage1 = require("assets/images/demo/rnr-image-1.png")
+const rnrImage2 = require("assets/images/demo/rnr-image-2.png")
+const rnrImage3 = require("assets/images/demo/rnr-image-3.png")
+const rnrImages = [rnrImage1, rnrImage2, rnrImage3]
+
+export default observer(function PodcastDetailScreen() {
   const { id } = useGlobalSearchParams()
 
+  const { episodeStore } = useStores()
+  const episode = episodeStore.episodeById(id as string)
+  const { width } = useWindowDimensions()
+
+  const imageUri = useMemo<ImageSourcePropType>(() => {
+    return rnrImages[Math.floor(Math.random() * rnrImages.length)]
+  }, [])
+
+  useHeader(
+    {
+      leftIcon: "back",
+      onLeftPress: router.back,
+    },
+    [],
+  )
+
+  const imageSize = width * 0.25
+
+  if (!episode) {
+    return (
+      <View>
+        <Text>Episode not found!</Text>
+      </View>
+    )
+  }
+
+  const source = { html: `${episode.description}` }
+
   return (
-    <Screen preset="scroll" safeAreaEdges={["top"]} contentContainerStyle={$container}>
-      <Text style={$title} preset="heading" text="Title here" />
-      <Text>id: {id}</Text>
+    <Screen preset="scroll" contentContainerStyle={$container}>
+      <View style={$headerContainer}>
+        <Image
+          source={imageUri}
+          resizeMode="cover"
+          style={[$itemThumbnail, { height: imageSize, width: imageSize }]}
+        />
+
+        <Text preset="subheading" text={episode.parsedTitleAndSubtitle.subtitle} />
+
+        <View style={$metadata}>
+          <Text
+            style={$metadataText}
+            size="xxs"
+            accessibilityLabel={episode.datePublished.accessibilityLabel}
+          >
+            {episode.datePublished.textLabel}
+          </Text>
+          <Text
+            style={$metadataText}
+            size="xxs"
+            accessibilityLabel={episode.duration.accessibilityLabel}
+          >
+            {episode.duration.textLabel}
+          </Text>
+          <Text
+            style={$metadataText}
+            size="xxs"
+            accessibilityLabel={episode.parsedTitleAndSubtitle.title}
+          >
+            {episode.parsedTitleAndSubtitle.title}
+          </Text>
+        </View>
+      </View>
+
+      <View>
+        <Button
+          preset="reversed"
+          onPress={() => {
+            openLinkInBrowser(episode.enclosure.link)
+          }}
+          text="Play Episode"
+        />
+      </View>
+
+      <RenderHtml contentWidth={width - spacing.xxxl * 2} source={source} />
     </Screen>
   )
-}
+})
 
 const $container: ViewStyle = {
-  paddingTop: spacing.lg + spacing.xl,
-  paddingBottom: spacing.xxl,
-  paddingHorizontal: spacing.lg,
+  paddingHorizontal: spacing.xl,
+  justifyContent: "space-evenly",
+  gap: spacing.lg,
 }
 
-const $title: TextStyle = {
-  marginBottom: spacing.xxl,
+const $headerContainer: ViewStyle = {
+  gap: spacing.xs,
 }
 
-const $reportBugsLink: TextStyle = {
-  color: colors.tint,
-  marginBottom: spacing.lg,
-  alignSelf: isRTL ? "flex-start" : "flex-end",
+const $metadata: TextStyle = {
+  color: colors.textDim,
+  gap: spacing.xs,
+  flexDirection: "row",
+  justifyContent: "space-evenly",
 }
 
-const $item: ViewStyle = {
-  marginBottom: spacing.md,
-}
-
-const $itemsContainer: ViewStyle = {
-  marginBottom: spacing.xl,
-}
-
-const $button: ViewStyle = {
+const $metadataText: TextStyle = {
+  color: colors.textDim,
+  marginEnd: spacing.md,
   marginBottom: spacing.xs,
 }
 
-const $buttonContainer: ViewStyle = {
-  marginBottom: spacing.md,
-}
-
-const $hint: TextStyle = {
-  color: colors.palette.neutral600,
-  fontSize: 12,
-  lineHeight: 15,
-  paddingBottom: spacing.lg,
+const $itemThumbnail: ImageStyle = {
+  borderRadius: 50,
+  alignSelf: "center",
 }
