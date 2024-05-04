@@ -36,7 +36,7 @@ import { useStores } from "src/models"
 import { Episode } from "src/models/Episode"
 import { colors, spacing } from "src/theme"
 import { delay } from "src/utils/delay"
-import { openLinkInBrowser } from "src/utils/openLinkInBrowser"
+import { Link } from "expo-router"
 
 const ICON_SIZE = 14
 
@@ -207,10 +207,6 @@ const EpisodeCard = observer(function EpisodeCard({
     liked.value = withSpring(liked.value ? 0 : 1)
   }
 
-  const handlePressCard = () => {
-    openLinkInBrowser(episode.enclosure.link)
-  }
-
   const ButtonLeftAccessory: ComponentType<ButtonAccessoryProps> = useMemo(
     () =>
       function ButtonLeftAccessory() {
@@ -239,57 +235,58 @@ const EpisodeCard = observer(function EpisodeCard({
   )
 
   return (
-    <Card
-      style={$item}
-      verticalAlignment="force-footer-bottom"
-      onPress={handlePressCard}
-      onLongPress={handlePressFavorite}
-      HeadingComponent={
-        <View style={$metadata}>
-          <Text
-            style={$metadataText}
-            size="xxs"
-            accessibilityLabel={episode.datePublished.accessibilityLabel}
-          >
-            {episode.datePublished.textLabel}
-          </Text>
-          <Text
-            style={$metadataText}
-            size="xxs"
-            accessibilityLabel={episode.duration.accessibilityLabel}
-          >
-            {episode.duration.textLabel}
-          </Text>
-        </View>
-      }
-      content={`${episode.parsedTitleAndSubtitle.title} - ${episode.parsedTitleAndSubtitle.subtitle}`}
-      {...accessibilityHintProps}
-      RightComponent={<Image source={imageUri} style={$itemThumbnail} />}
-      FooterComponent={
-        <Button
-          onPress={handlePressFavorite}
-          onLongPress={handlePressFavorite}
-          style={[$favoriteButton, isFavorite && $unFavoriteButton]}
-          accessibilityLabel={
-            isFavorite
-              ? translate("demoPodcastListScreen.accessibility.unfavoriteIcon")
-              : translate("demoPodcastListScreen.accessibility.favoriteIcon")
-          }
-          LeftAccessory={ButtonLeftAccessory}
-        >
-          <Text
-            size="xxs"
-            accessibilityLabel={episode.duration.accessibilityLabel}
-            weight="medium"
-            text={
+    <Link href={`/podcasts/${episode.guid}`} asChild>
+      <Card
+        style={$item}
+        verticalAlignment="force-footer-bottom"
+        onLongPress={handlePressFavorite}
+        HeadingComponent={
+          <View style={$metadata}>
+            <Text
+              style={$metadataText}
+              size="xxs"
+              accessibilityLabel={episode.datePublished.accessibilityLabel}
+            >
+              {episode.datePublished.textLabel}
+            </Text>
+            <Text
+              style={$metadataText}
+              size="xxs"
+              accessibilityLabel={episode.duration.accessibilityLabel}
+            >
+              {episode.duration.textLabel}
+            </Text>
+          </View>
+        }
+        content={`${episode.parsedTitleAndSubtitle.title} - ${episode.parsedTitleAndSubtitle.subtitle}`}
+        {...accessibilityHintProps}
+        RightComponent={<Image source={imageUri} style={$itemThumbnail} />}
+        FooterComponent={
+          <Button
+            onPress={handlePressFavorite}
+            onLongPress={handlePressFavorite}
+            style={[$favoriteButton, isFavorite && $unFavoriteButton]}
+            accessibilityLabel={
               isFavorite
-                ? translate("demoPodcastListScreen.unfavoriteButton")
-                : translate("demoPodcastListScreen.favoriteButton")
+                ? translate("demoPodcastListScreen.accessibility.unfavoriteIcon")
+                : translate("demoPodcastListScreen.accessibility.favoriteIcon")
             }
-          />
-        </Button>
-      }
-    />
+            LeftAccessory={ButtonLeftAccessory}
+          >
+            <Text
+              size="xxs"
+              accessibilityLabel={episode.duration.accessibilityLabel}
+              weight="medium"
+              text={
+                isFavorite
+                  ? translate("demoPodcastListScreen.unfavoriteButton")
+                  : translate("demoPodcastListScreen.favoriteButton")
+              }
+            />
+          </Button>
+        }
+      />
+    </Link>
   )
 })
 
