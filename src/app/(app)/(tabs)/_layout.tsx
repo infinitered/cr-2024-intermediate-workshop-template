@@ -1,6 +1,7 @@
 import React from "react"
 import { Tabs } from "expo-router/tabs"
 import { observer } from "mobx-react-lite"
+import * as NavigationBar from "expo-navigation-bar"
 import { Icon } from "src/components"
 import { translate } from "src/i18n"
 import { colors, spacing, typography } from "src/theme"
@@ -9,6 +10,10 @@ import { useSafeAreaInsets } from "react-native-safe-area-context"
 
 export default observer(function Layout() {
   const { bottom } = useSafeAreaInsets()
+
+  React.useEffect(() => {
+    NavigationBar.setBackgroundColorAsync(colors.background)
+  }, [])
 
   return (
     <Tabs

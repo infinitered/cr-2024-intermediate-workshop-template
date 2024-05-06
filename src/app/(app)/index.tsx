@@ -1,6 +1,7 @@
 import { router } from "expo-router"
 import { observer } from "mobx-react-lite"
 import React from "react"
+import * as NavigationBar from "expo-navigation-bar"
 import { Image, ImageStyle, TextStyle, View, ViewStyle } from "react-native"
 import { Button, Text } from "src/components"
 import { isRTL } from "src/i18n"
@@ -28,6 +29,10 @@ export default observer(function WelcomeScreen() {
     },
     [logout],
   )
+
+  React.useEffect(() => {
+    NavigationBar.setBackgroundColorAsync(colors.palette.neutral100)
+  }, [])
 
   const $bottomContainerInsets = useSafeAreaInsetsStyle(["bottom"])
 
