@@ -4,19 +4,20 @@ import {
   Image,
   ImageSourcePropType,
   ImageStyle,
+  InteractionManager,
   TextStyle,
   View,
   ViewStyle,
   useWindowDimensions,
 } from "react-native"
-import { router, useGlobalSearchParams } from "expo-router"
+import { router, useGlobalSearchParams, useNavigation } from "expo-router"
 import RenderHtml from "react-native-render-html"
+import Animated, { FadeIn, SlideInRight } from "react-native-reanimated"
 
 import { colors, spacing } from "src/theme"
-import { Screen, Button, Text } from "src/components"
+import { Screen, Button, Text, Header } from "src/components"
 import { useStores } from "src/models"
 import { openLinkInBrowser } from "src/utils/openLinkInBrowser"
-import { useHeader } from "src/utils/useHeader"
 
 const rnrImage1 = require("assets/images/demo/rnr-image-1.png")
 const rnrImage2 = require("assets/images/demo/rnr-image-2.png")
@@ -25,22 +26,27 @@ const rnrImages = [rnrImage1, rnrImage2, rnrImage3]
 
 export default observer(function PodcastDetailScreen() {
   const { id } = useGlobalSearchParams()
-
   const { episodeStore } = useStores()
   const episode = episodeStore.episodeById(id as string)
   const { width } = useWindowDimensions()
+  const [afterInteractions, setAfterInteractions] = React.useState(false)
 
   const imageUri = useMemo<ImageSourcePropType>(() => {
     return rnrImages[Math.floor(Math.random() * rnrImages.length)]
   }, [])
 
-  useHeader(
-    {
-      leftIcon: "back",
-      onLeftPress: router.back,
-    },
-    [],
-  )
+  const navigation = useNavigation()
+
+  React.useEffect(() => {
+    InteractionManager.runAfterInteractions(() => {
+      setAfterInteractions(true)
+
+      navigation.setOptions({
+        headerShown: true,
+        header: () => <Header leftIcon="back" onLeftPress={router.back} />,
+      })
+    })
+  }, [])
 
   const imageSize = width * 0.25
 
@@ -56,7 +62,7 @@ export default observer(function PodcastDetailScreen() {
 
   return (
     <Screen preset="scroll" contentContainerStyle={$container}>
-      <View style={$headerContainer}>
+      <Animated.View style={$headerContainer} entering={SlideInRight}>
         <Image
           source={imageUri}
           resizeMode="cover"
@@ -88,19 +94,23 @@ export default observer(function PodcastDetailScreen() {
             {episode.parsedTitleAndSubtitle.title}
           </Text>
         </View>
-      </View>
+      </Animated.View>
 
-      <View>
-        <Button
-          preset="reversed"
-          onPress={() => {
-            openLinkInBrowser(episode.enclosure.link)
-          }}
-          text="Play Episode"
-        />
-      </View>
+      {afterInteractions && (
+        <Animated.View entering={FadeIn.duration(500)}>
+          <View>
+            <Button
+              preset="reversed"
+              onPress={() => {
+                openLinkInBrowser(episode.enclosure.link)
+              }}
+              text="Play Episode"
+            />
+          </View>
 
-      <RenderHtml contentWidth={width - spacing.xxxl * 2} source={source} />
+          <RenderHtml contentWidth={width - spacing.xxxl * 2} source={source} />
+        </Animated.View>
+      )}
     </Screen>
   )
 })
