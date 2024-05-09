@@ -3,6 +3,9 @@ import React from "react"
 import { Slot, SplashScreen } from "expo-router"
 import { useInitialRootStore } from "src/models"
 import { KeyboardProvider } from "react-native-keyboard-controller"
+import { GestureHandlerRootView } from "react-native-gesture-handler"
+import { BottomSheetModalProvider } from "@gorhom/bottom-sheet"
+import { ViewStyle } from "react-native"
 
 SplashScreen.preventAutoHideAsync()
 
@@ -24,8 +27,14 @@ export default function Root() {
   }
 
   return (
-    <KeyboardProvider>
-      <Slot />
-    </KeyboardProvider>
+    <GestureHandlerRootView style={$root}>
+      <BottomSheetModalProvider>
+        <KeyboardProvider>
+          <Slot />
+        </KeyboardProvider>
+      </BottomSheetModalProvider>
+    </GestureHandlerRootView>
   )
 }
+
+const $root: ViewStyle = { flex: 1 }
