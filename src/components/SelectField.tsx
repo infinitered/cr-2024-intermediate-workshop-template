@@ -12,6 +12,7 @@ import { Button } from "./Button"
 import { Icon } from "./Icon"
 import { ListItem } from "./ListItem"
 import { TextField, TextFieldProps } from "./TextField"
+import { FontAwesome6 } from "@expo/vector-icons"
 
 export interface SelectFieldProps
   extends Omit<TextFieldProps, "ref" | "onValueChange" | "onChange" | "value"> {
@@ -20,6 +21,11 @@ export interface SelectFieldProps
   onSelect?: (newValue: string[]) => void
   multiple?: boolean
   options: { label: string; value: string }[]
+  searchable?: boolean
+  /**
+   * Pass any additional props directly to the search TextField component.
+   */
+  SearchFieldProps?: TextFieldProps
 }
 export interface SelectFieldRef {
   presentOptions: () => void
@@ -40,12 +46,16 @@ export const SelectField = forwardRef(function SelectField(
     renderValue,
     options = [],
     multiple = true,
+    SearchFieldProps,
+    searchable = false,
     ...TextFieldProps
   } = props
   const sheet = useRef<BottomSheetModal>(null)
-  const { bottom } = useSafeAreaInsets()
+  const { bottom, top } = useSafeAreaInsets()
 
   const disabled = TextFieldProps.editable === false || TextFieldProps.status === "disabled"
+
+  const [searchValue, setSearchValue] = React.useState("")
 
   useImperativeHandle(ref, () => ({ presentOptions, dismissOptions }))
 
@@ -63,6 +73,7 @@ export const SelectField = forwardRef(function SelectField(
   }
 
   function dismissOptions() {
+    setSearchValue("")
     sheet.current?.dismiss()
   }
 
@@ -74,6 +85,16 @@ export const SelectField = forwardRef(function SelectField(
       if (!multiple) dismissOptions()
     }
   }
+
+  function updateSearchValue(value: string) {
+    // Could debounce here
+    setSearchValue(value)
+  }
+
+  // Filter options for partial name if searchable is true
+  const filteredOptions = searchable
+    ? options.filter((o) => o.label.toLowerCase().includes(searchValue.toLowerCase()))
+    : options
 
   return (
     <>
@@ -89,11 +110,17 @@ export const SelectField = forwardRef(function SelectField(
 
       <BottomSheetModal
         ref={sheet}
-        snapPoints={["50%"]}
+        // TODO if typing let this go fullscreen?
+        snapPoints={searchable ? ["100%"] : ["50%"]}
         stackBehavior="replace"
         enableDismissOnClose
         backdropComponent={(props) => (
-          <BottomSheetBackdrop {...props} appearsOnIndex={0} disappearsOnIndex={-1} />
+          <BottomSheetBackdrop
+            {...props}
+            appearsOnIndex={0}
+            disappearsOnIndex={-1}
+            onPress={() => setSearchValue("")}
+          />
         )}
         footerComponent={
           !multiple
@@ -106,8 +133,11 @@ export const SelectField = forwardRef(function SelectField(
         }
       >
         <BottomSheetFlatList
-          style={{ marginBottom: bottom + (multiple ? 56 : 0) }}
-          data={options}
+          style={{
+            marginTop: searchable ? top : undefined,
+            marginBottom: bottom + (multiple ? 56 : 0),
+          }}
+          data={filteredOptions}
           keyExtractor={(o) => o.value}
           renderItem={({ item, index }) => (
             <ListItem
@@ -119,6 +149,31 @@ export const SelectField = forwardRef(function SelectField(
               onPress={() => updateValue(item.value)}
             />
           )}
+          keyboardShouldPersistTaps="always"
+          ListHeaderComponent={
+            searchable ? (
+              <TextField
+                autoFocus
+                value={searchValue}
+                onChangeText={updateSearchValue}
+                containerStyle={$searchContainer}
+                RightAccessory={() => {
+                  return searchValue ? (
+                    <TouchableOpacity style={$searchClearButton} onPress={() => setSearchValue("")}>
+                      <FontAwesome6
+                        name="times-circle"
+                        backgroundColor="transparent"
+                        color={colors.text}
+                        size={20}
+                      />
+                    </TouchableOpacity>
+                  ) : undefined
+                }}
+                {...SearchFieldProps}
+              />
+            ) : undefined
+          }
+          stickyHeaderIndices={searchable ? [0] : undefined}
         />
       </BottomSheetModal>
     </>
@@ -131,4 +186,16 @@ const $bottomSheetFooter: ViewStyle = {
 
 const $listItem: ViewStyle = {
   paddingHorizontal: spacing.lg,
+}
+
+const $searchContainer: ViewStyle = {
+  paddingHorizontal: spacing.lg,
+}
+
+const $searchClearButton: ViewStyle = {
+  overflow: "hidden",
+  height: 40,
+  paddingHorizontal: spacing.xs,
+  alignContent: "center",
+  justifyContent: "center",
 }
