@@ -1,4 +1,4 @@
-import React, { ComponentType, Fragment, ReactElement } from "react"
+import React, { ComponentType, Fragment, ReactElement, Ref, RefAttributes, forwardRef } from "react"
 import {
   StyleProp,
   TextStyle,
@@ -116,6 +116,8 @@ interface CardProps extends TouchableOpacityProps {
   FooterComponent?: ReactElement
 }
 
+type RefProps = RefAttributes<View>
+
 /**
  * Cards are useful for displaying related information in a contained way.
  * If a ListItem displays content horizontally, a Card can be used to display content vertically.
@@ -123,7 +125,7 @@ interface CardProps extends TouchableOpacityProps {
  * @param {CardProps} props - The props for the `Card` component.
  * @returns {JSX.Element} The rendered `Card` component.
  */
-export function Card(props: CardProps) {
+export const Card = forwardRef(function Card(props: CardProps, ref) {
   const {
     content,
     contentTx,
@@ -156,9 +158,15 @@ export function Card(props: CardProps) {
   const isContentPresent = !!(ContentComponent || content || contentTx)
   const isFooterPresent = !!(FooterComponent || footer || footerTx)
 
-  const Wrapper = (isPressable ? TouchableOpacity : View) as ComponentType<
-    TouchableOpacityProps | ViewProps
-  >
+  const Wrapper = forwardRef<View, typeof WrapperProps & RefProps>(function Wrapper(
+    wrapperProps,
+    innerRef,
+  ) {
+    const Component = isPressable
+      ? TouchableOpacity
+      : (View as React.ComponentType<TouchableOpacityProps | ViewProps>)
+    return <Component ref={innerRef} {...wrapperProps} />
+  })
   const HeaderContentWrapper = verticalAlignment === "force-footer-bottom" ? View : Fragment
 
   const $containerStyle = [$containerPresets[preset], $containerStyleOverride]
@@ -190,6 +198,7 @@ export function Card(props: CardProps) {
 
   return (
     <Wrapper
+      ref={ref}
       style={$containerStyle}
       activeOpacity={0.8}
       accessibilityRole={isPressable ? "button" : undefined}
@@ -241,7 +250,7 @@ export function Card(props: CardProps) {
       {RightComponent}
     </Wrapper>
   )
-}
+})
 
 const $containerBase: ViewStyle = {
   borderRadius: spacing.md,

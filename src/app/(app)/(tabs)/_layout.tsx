@@ -47,8 +47,6 @@ export default observer(function Layout() {
       <Tabs.Screen
         name="podcasts"
         options={{
-          href: "/podcasts",
-          headerShown: false,
           tabBarAccessibilityLabel: translate("demoNavigator.podcastListTab"),
           tabBarLabel: translate("demoNavigator.podcastListTab"),
           tabBarIcon: ({ focused }) => (

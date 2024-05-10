@@ -35,6 +35,10 @@ export const EpisodeStoreModel = types
     hasFavorite(episode: Episode) {
       return store.favorites.includes(episode)
     },
+
+    episodeById(guid: string) {
+      return store.episodes.find((episode) => episode.guid === guid)
+    },
   }))
   .actions((store) => ({
     toggleFavorite(episode: Episode) {
