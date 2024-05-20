@@ -5,7 +5,7 @@
     "name": "cr2024-im",
     "slug": "cr2024-im",
     "scheme": "cr2024-im",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/images/app-icon-all.png",
     "splash": {
@@ -17,9 +17,7 @@
       "fallbackToCacheTimeout": 0
     },
     "jsEngine": "hermes",
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "android": {
       "icon": "./assets/images/app-icon-android-legacy.png",
       "package": "com.cr2024im",
@@ -42,6 +40,9 @@
         "tabletImage": "./assets/images/splash-logo-ios-tablet.png",
         "resizeMode": "contain",
         "backgroundColor": "#191015"
+      },
+      "entitlements": {
+        "com.apple.security.application-groups": ["group.cr2024im.data"]
       }
     },
     "web": {
@@ -68,7 +69,13 @@
         }
       ],
       "expo-font",
-      "expo-router"
+      "expo-router",
+      [
+        "@bacons/apple-targets",
+        {
+          "appleTeamId": "XXXXXXXXX"
+        }
+      ]
     ],
     "experiments": {
       "tsconfigPaths": true,
