@@ -2,7 +2,7 @@
   "name": "cr-2024-im",
   "version": "0.0.1",
   "private": true,
-  "main": "expo-router/entry",
+  "main": "src/main.tsx",
   "scripts": {
     "compile": "tsc --noEmit -p . --pretty",
     "format": "prettier --write \"src/**/*.{js,jsx,json,md,ts,tsx}\"",
@@ -58,6 +58,7 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-native": "0.74.1",
+    "react-native-android-widget": "^0.14.0",
     "react-native-drawer-layout": "4.0.0-alpha.1",
     "react-native-gesture-handler": "~2.16.0",
     "react-native-reanimated": "~3.10.1",

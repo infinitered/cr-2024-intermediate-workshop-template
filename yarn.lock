@@ -8381,6 +8381,11 @@ react-is@^17.0.1:
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-17.0.2.tgz#e691d4a8e9c789365655539ab372762b0efb54f0"
   integrity sha512-w2GsyukL62IJnlaff/nRegPQR94C/XXamvMWmSHRJ4y7Ts/4ocGRmTHvOs8PSE6pB3dWOrD/nueuU5sduBsQ4w==
 
+react-native-android-widget@^0.14.0:
+  version "0.14.0"
+  resolved "https://registry.yarnpkg.com/react-native-android-widget/-/react-native-android-widget-0.14.0.tgz#563790531ca916276df5f31e1cd2280a11da8047"
+  integrity sha512-LTK0WSqCpl26tvGVh5+TLOq2JPvUe/dax6qvDX9J9yNRv0vkqWrOLD8/ZuA4UFs69KDz+Jh25UTinrIu54abgQ==
+
 react-native-drawer-layout@4.0.0-alpha.1:
   version "4.0.0-alpha.1"
   resolved "https://registry.yarnpkg.com/react-native-drawer-layout/-/react-native-drawer-layout-4.0.0-alpha.1.tgz#458f2f060e0d175b161d546aeb306f350e42a3ae"
