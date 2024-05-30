@@ -33,6 +33,7 @@
     "@bacons/apple-targets": "^0.0.3",
     "@expo-google-fonts/space-grotesk": "^0.2.2",
     "@react-native-async-storage/async-storage": "1.23.1",
+    "@react-native/normalize-color": "^2.1.0",
     "@react-navigation/bottom-tabs": "^6.3.2",
     "@react-navigation/native": "^6.0.2",
     "@react-navigation/native-stack": "^6.0.2",
@@ -106,6 +107,10 @@
     "ts-jest": "^29.1.1",
     "ts-node": "^10.9.2",
     "typescript": "~5.3.3"
+  },
+  "resolutions": {
+    "wrap-ansi": "7.0.0",
+    "string-width": "4.1.0"
   },
   "engines": {
     "node": ">=18"
