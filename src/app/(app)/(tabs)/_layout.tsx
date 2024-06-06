@@ -60,13 +60,13 @@ export default observer(function Layout() {
         }}
       />
       <Tabs.Screen
-        name="debug"
+        name="profile"
         options={{
-          href: "/debug",
+          href: "/profile",
           headerShown: false,
-          tabBarLabel: translate("demoNavigator.debugTab"),
+          tabBarLabel: translate("demoNavigator.profileTab"),
           tabBarIcon: ({ focused }) => (
-            <Icon icon="debug" color={focused ? colors.tint : undefined} size={30} />
+            <Icon icon="user" color={focused ? colors.tint : undefined} size={30} />
           ),
         }}
       />

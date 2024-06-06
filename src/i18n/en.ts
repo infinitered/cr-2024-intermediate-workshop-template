@@ -43,7 +43,7 @@ const en = {
   },
   demoNavigator: {
     componentsTab: "Components",
-    debugTab: "Debug",
+    profileTab: "Profile",
     communityTab: "Community",
     podcastListTab: "Podcast",
   },
@@ -77,6 +77,18 @@ const en = {
     demoHeaderTxExample: "Yay",
     demoViaTxProp: "Via `tx` Prop",
     demoViaSpecifiedTxProp: "Via `{{prop}}Tx` Prop",
+  },
+  demoProfileScreen: {
+    title: "Profile",
+    name: "Name",
+    location: "Location",
+    job: "Looking for a job?",
+    remote: "Remote only?",
+    bio: "Bio",
+    yoe: "Years of Experience",
+    rnFamiliarity: "React Native Familiarity",
+    skills: "Skills",
+    addMulti: "Add code for multi-select here for developer to choose their skills",
   },
   demoDebugScreen: {
     howTo: "HOW TO",
