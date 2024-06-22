@@ -2,6 +2,7 @@ import { Instance, SnapshotOut, types } from "mobx-state-tree"
 import { api } from "../services/api"
 import { Episode, EpisodeModel } from "./Episode"
 import { withSetPropAction } from "./helpers/withSetPropAction"
+import { updateEpisodesWidget } from "../widgets/widget-refresher"
 
 export const EpisodeStoreModel = types
   .model("EpisodeStore")
@@ -22,9 +23,11 @@ export const EpisodeStoreModel = types
     },
     addFavorite(episode: Episode) {
       store.favorites.push(episode)
+      updateEpisodesWidget(store.favorites.slice())
     },
     removeFavorite(episode: Episode) {
       store.favorites.remove(episode)
+      updateEpisodesWidget(store.favorites.slice())
     },
   }))
   .views((store) => ({
