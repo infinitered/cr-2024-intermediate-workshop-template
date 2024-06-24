@@ -57,14 +57,22 @@ export default observer(function ProfileScreen() {
         minimumValue={0}
         maximumValue={4}
         minimumTrackTintColor={colors.tint}
-        maximumTrackTintColor={colors.text}
+        maximumTrackTintColor={colors.palette.secondary500}
         tapToSeek
         step={1}
         value={rnFamiliarity}
         onValueChange={(value) => setProp("rnFamiliarity", value)}
-        style={{ marginBottom: spacing.sm }}
+        style={$slider}
+        renderStepNumber
         StepMarker={({ stepMarked }) => (
-          <View style={[$stepMarkerStyle, stepMarked && { backgroundColor: colors.transparent }]} />
+          <View
+            style={[
+              $stepMarkerStyle,
+              stepMarked && {
+                backgroundColor: colors.transparent,
+              },
+            ]}
+          />
         )}
       />
 
@@ -116,8 +124,10 @@ const $stepMarkerStyle: ViewStyle = {
   width: 8,
   height: 8,
   borderRadius: 4,
-  backgroundColor: colors.palette.primary500,
+  backgroundColor: colors.tint,
   marginTop: 6,
 }
+
+const $slider: ViewStyle = { marginBottom: spacing.xl }
 
 const $familiaritySubtitle: TextStyle = { alignSelf: "center" }
