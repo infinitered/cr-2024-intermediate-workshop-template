@@ -69,6 +69,10 @@ export const colors = {
    */
   tint: palette.primary500,
   /**
+   * The inactive tinting color.
+   */
+  tintInactive: palette.neutral300,
+  /**
    * A subtle color used for lines.
    */
   separator: palette.neutral300,
@@ -81,4 +85,4 @@ export const colors = {
    *
    */
   errorBackground: palette.angry100,
-}
+} as const

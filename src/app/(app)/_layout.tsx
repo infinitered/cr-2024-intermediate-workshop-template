@@ -4,11 +4,16 @@ import { observer } from "mobx-react-lite"
 import { useStores } from "src/models"
 import { useFonts } from "expo-font"
 import { customFontsToLoad } from "src/theme"
+import { useAppTheme, useThemeProvider } from "src/utils/useAppTheme"
 
 export default observer(function Layout() {
   const {
     authenticationStore: { isAuthenticated },
   } = useStores()
+  const {
+    theme: { colors },
+  } = useAppTheme()
+  const { themeScheme, setThemeContextOverride, ThemeProvider } = useThemeProvider()
 
   const [fontsLoaded, fontError] = useFonts(customFontsToLoad)
 
@@ -27,5 +32,17 @@ export default observer(function Layout() {
     return <Redirect href="/log-in" />
   }
 
-  return <Stack screenOptions={{ headerShown: false }} />
+  return (
+    <ThemeProvider value={{ themeScheme, setThemeContextOverride }}>
+      <Stack
+        screenOptions={{
+          headerShown: false,
+          navigationBarColor: colors.background,
+          contentStyle: {
+            backgroundColor: colors.background,
+          },
+        }}
+      />
+    </ThemeProvider>
+  )
 })

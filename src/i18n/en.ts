@@ -77,6 +77,8 @@ const en = {
     demoHeaderTxExample: "Yay",
     demoViaTxProp: "Via `tx` Prop",
     demoViaSpecifiedTxProp: "Via `{{prop}}Tx` Prop",
+    darkMode: "Dark",
+    lightMode: "Light",
   },
   demoProfileScreen: {
     title: "Profile",
