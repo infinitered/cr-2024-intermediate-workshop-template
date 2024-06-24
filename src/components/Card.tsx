@@ -1,4 +1,4 @@
-import React, { ComponentType, Fragment, ReactElement, Ref, RefAttributes, forwardRef } from "react"
+import React, { ComponentType, Fragment, ReactElement } from "react"
 import {
   StyleProp,
   TextStyle,
@@ -8,10 +8,11 @@ import {
   ViewProps,
   ViewStyle,
 } from "react-native"
-import { colors, spacing } from "../theme"
+import type { ThemedStyle, ThemedStyleArray } from "src/theme"
 import { Text, TextProps } from "./Text"
+import { useAppTheme } from "src/utils/useAppTheme"
 
-type Presets = keyof typeof $containerPresets
+type Presets = "default" | "reversed"
 
 interface CardProps extends TouchableOpacityProps {
   /**
@@ -116,8 +117,6 @@ interface CardProps extends TouchableOpacityProps {
   FooterComponent?: ReactElement
 }
 
-type RefProps = RefAttributes<View>
-
 /**
  * Cards are useful for displaying related information in a contained way.
  * If a ListItem displays content horizontally, a Card can be used to display content vertically.
@@ -125,7 +124,7 @@ type RefProps = RefAttributes<View>
  * @param {CardProps} props - The props for the `Card` component.
  * @returns {JSX.Element} The rendered `Card` component.
  */
-export const Card = forwardRef(function Card(props: CardProps, ref) {
+export function Card(props: CardProps) {
   const {
     content,
     contentTx,
@@ -152,39 +151,41 @@ export const Card = forwardRef(function Card(props: CardProps, ref) {
     ...WrapperProps
   } = props
 
+  const {
+    themed,
+    theme: { spacing },
+  } = useAppTheme()
+
   const preset: Presets = props.preset ?? "default"
   const isPressable = !!WrapperProps.onPress
   const isHeadingPresent = !!(HeadingComponent || heading || headingTx)
   const isContentPresent = !!(ContentComponent || content || contentTx)
   const isFooterPresent = !!(FooterComponent || footer || footerTx)
 
-  const Wrapper = forwardRef<View, typeof WrapperProps & RefProps>(function Wrapper(
-    wrapperProps,
-    innerRef,
-  ) {
-    const Component = isPressable
-      ? TouchableOpacity
-      : (View as React.ComponentType<TouchableOpacityProps | ViewProps>)
-    return <Component ref={innerRef} {...wrapperProps} />
-  })
+  const Wrapper = (isPressable ? TouchableOpacity : View) as ComponentType<
+    TouchableOpacityProps | ViewProps
+  >
   const HeaderContentWrapper = verticalAlignment === "force-footer-bottom" ? View : Fragment
 
-  const $containerStyle = [$containerPresets[preset], $containerStyleOverride]
+  const $containerStyle: StyleProp<ViewStyle> = [
+    themed($containerPresets[preset]),
+    $containerStyleOverride,
+  ]
   const $headingStyle = [
-    $headingPresets[preset],
+    themed($headingPresets[preset]),
     (isFooterPresent || isContentPresent) && { marginBottom: spacing.xxxs },
     $headingStyleOverride,
     HeadingTextProps?.style,
   ]
   const $contentStyle = [
-    $contentPresets[preset],
+    themed($contentPresets[preset]),
     isHeadingPresent && { marginTop: spacing.xxxs },
     isFooterPresent && { marginBottom: spacing.xxxs },
     $contentStyleOverride,
     ContentTextProps?.style,
   ]
   const $footerStyle = [
-    $footerPresets[preset],
+    themed($footerPresets[preset]),
     (isHeadingPresent || isContentPresent) && { marginTop: spacing.xxxs },
     $footerStyleOverride,
     FooterTextProps?.style,
@@ -198,7 +199,6 @@ export const Card = forwardRef(function Card(props: CardProps, ref) {
 
   return (
     <Wrapper
-      ref={ref}
       style={$containerStyle}
       activeOpacity={0.8}
       accessibilityRole={isPressable ? "button" : undefined}
@@ -250,20 +250,20 @@ export const Card = forwardRef(function Card(props: CardProps, ref) {
       {RightComponent}
     </Wrapper>
   )
-})
+}
 
-const $containerBase: ViewStyle = {
-  borderRadius: spacing.md,
-  padding: spacing.xs,
+const $containerBase: ThemedStyle<ViewStyle> = (theme) => ({
+  borderRadius: theme.spacing.md,
+  padding: theme.spacing.xs,
   borderWidth: 1,
-  shadowColor: colors.palette.neutral800,
+  shadowColor: theme.colors.palette.neutral800,
   shadowOffset: { width: 0, height: 12 },
   shadowOpacity: 0.08,
   shadowRadius: 12.81,
   elevation: 16,
   minHeight: 96,
   flexDirection: "row",
-}
+})
 
 const $alignmentWrapper: ViewStyle = {
   flex: 1,
@@ -277,32 +277,34 @@ const $alignmentWrapperFlexOptions = {
   "force-footer-bottom": "space-between",
 } as const
 
-const $containerPresets = {
+const $containerPresets: Record<Presets, ThemedStyleArray<ViewStyle>> = {
   default: [
     $containerBase,
-    {
-      backgroundColor: colors.palette.neutral100,
-      borderColor: colors.palette.neutral300,
-    },
-  ] as StyleProp<ViewStyle>,
-
+    (theme) => ({
+      backgroundColor: theme.colors.palette.neutral100,
+      borderColor: theme.colors.palette.neutral300,
+    }),
+  ],
   reversed: [
     $containerBase,
-    { backgroundColor: colors.palette.neutral800, borderColor: colors.palette.neutral500 },
-  ] as StyleProp<ViewStyle>,
+    (theme) => ({
+      backgroundColor: theme.colors.palette.neutral800,
+      borderColor: theme.colors.palette.neutral500,
+    }),
+  ],
 }
 
-const $headingPresets: Record<Presets, TextStyle> = {
-  default: {},
-  reversed: { color: colors.palette.neutral100 },
+const $headingPresets: Record<Presets, ThemedStyleArray<TextStyle>> = {
+  default: [],
+  reversed: [(theme) => ({ color: theme.colors.palette.neutral100 })],
 }
 
-const $contentPresets: Record<Presets, TextStyle> = {
-  default: {},
-  reversed: { color: colors.palette.neutral100 },
+const $contentPresets: Record<Presets, ThemedStyleArray<TextStyle>> = {
+  default: [],
+  reversed: [(theme) => ({ color: theme.colors.palette.neutral100 })],
 }
 
-const $footerPresets: Record<Presets, TextStyle> = {
-  default: {},
-  reversed: { color: colors.palette.neutral100 },
+const $footerPresets: Record<Presets, ThemedStyleArray<TextStyle>> = {
+  default: [],
+  reversed: [(theme) => ({ color: theme.colors.palette.neutral100 })],
 }

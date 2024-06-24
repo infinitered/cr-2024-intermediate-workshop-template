@@ -1,5 +1,5 @@
 import { useScrollToTop } from "@react-navigation/native"
-import { StatusBar, StatusBarProps } from "expo-status-bar"
+import { StatusBar, StatusBarProps, StatusBarStyle } from "expo-status-bar"
 import React, { useRef, useState } from "react"
 import {
   KeyboardAvoidingView,
@@ -12,8 +12,8 @@ import {
   View,
   ViewStyle,
 } from "react-native"
-import { colors } from "../theme"
 import { ExtendedEdge, useSafeAreaInsetsStyle } from "../utils/useSafeAreaInsetsStyle"
+import { useAppTheme } from "src/utils/useAppTheme"
 
 interface BaseScreenProps {
   /**
@@ -39,7 +39,7 @@ interface BaseScreenProps {
   /**
    * Status bar setting. Defaults to dark.
    */
-  statusBarStyle?: "light" | "dark"
+  statusBarStyle?: StatusBarStyle
   /**
    * By how much should we offset the keyboard? Defaults to 0.
    */
@@ -221,25 +221,38 @@ function ScreenWithScrolling(props: ScreenProps) {
  * Represents a screen component that provides a consistent layout and behavior for different screen presets.
  * The `Screen` component can be used with different presets such as "fixed", "scroll", or "auto".
  * It handles safe area insets, status bar settings, keyboard avoiding behavior, and scrollability based on the preset.
- * @see [Documentation and Examples]{@link https://docs.infinite.red/ignite-cli/boilerplate/components/Screen/}
+ * @see [Documentation and Examples]{@link https://docs.infinite.red/ignite-cli/boilerplate/app/components/Screen/}
  * @param {ScreenProps} props - The props for the `Screen` component.
  * @returns {JSX.Element} The rendered `Screen` component.
  */
 export function Screen(props: ScreenProps) {
   const {
-    backgroundColor = colors.background,
+    theme: { colors },
+    themeContext,
+  } = useAppTheme()
+  const {
+    backgroundColor,
     KeyboardAvoidingViewProps,
     keyboardOffset = 0,
     safeAreaEdges,
     StatusBarProps,
-    statusBarStyle = "dark",
+    statusBarStyle,
   } = props
 
   const $containerInsets = useSafeAreaInsetsStyle(safeAreaEdges)
 
   return (
-    <View style={[$containerStyle, { backgroundColor }, $containerInsets]}>
-      <StatusBar style={statusBarStyle} {...StatusBarProps} />
+    <View
+      style={[
+        $containerStyle,
+        { backgroundColor: backgroundColor || colors.background },
+        $containerInsets,
+      ]}
+    >
+      <StatusBar
+        style={statusBarStyle || (themeContext === "dark" ? "light" : "dark")}
+        {...StatusBarProps}
+      />
 
       <KeyboardAvoidingView
         behavior={isIos ? "padding" : "height"}

@@ -1,5 +1,6 @@
 import React, { ComponentType, FC, useMemo } from "react"
 import {
+  Animated,
   GestureResponderEvent,
   Image,
   ImageStyle,
@@ -14,16 +15,12 @@ import {
   ViewProps,
   ViewStyle,
 } from "react-native"
-import Animated, {
-  Extrapolation,
-  interpolate,
-  useAnimatedStyle,
-  withTiming,
-} from "react-native-reanimated"
-import { colors, spacing } from "../theme"
+
+import { ThemedStyle, colors } from "../theme"
 import { iconRegistry, IconTypes } from "./Icon"
 import { Text, TextProps } from "./Text"
 import { isRTL } from "src/i18n"
+import { useAppTheme } from "src/utils/useAppTheme"
 
 type Variants = "checkbox" | "switch" | "radio"
 
@@ -187,6 +184,10 @@ export function Toggle(props: ToggleProps) {
   const { switchAccessibilityMode } = props as SwitchToggleProps
   const { checkboxIcon } = props as CheckboxToggleProps
 
+  const {
+    theme: { colors },
+    themed,
+  } = useAppTheme()
   const disabled = editable === false || status === "disabled" || props.disabled
 
   const Wrapper = useMemo(
@@ -197,11 +198,11 @@ export function Toggle(props: ToggleProps) {
 
   const $containerStyles = [$containerStyleOverride]
   const $inputWrapperStyles = [$inputWrapper, $inputWrapperStyleOverride]
-  const $helperStyles = [
+  const $helperStyles = themed([
     $helper,
     status === "error" && { color: colors.error },
     HelperTextProps?.style,
-  ]
+  ])
 
   /**
    * @param {GestureResponderEvent} e - The event object.
@@ -273,6 +274,16 @@ function Checkbox(props: ToggleInputProps) {
     detailStyle: $detailStyleOverride,
   } = props
 
+  const [opacity] = React.useState(new Animated.Value(0))
+
+  React.useEffect(() => {
+    Animated.timing(opacity, {
+      toValue: on ? 1 : 0,
+      duration: 300,
+      useNativeDriver: true,
+    }).start()
+  }, [on])
+
   const offBackgroundColor = [
     disabled && colors.palette.neutral400,
     status === "error" && colors.errorBackground,
@@ -311,7 +322,7 @@ function Checkbox(props: ToggleInputProps) {
           $checkboxInner,
           { backgroundColor: onBackgroundColor },
           $innerStyleOverride,
-          useAnimatedStyle(() => ({ opacity: withTiming(on ? 1 : 0) }), [on]),
+          { opacity },
         ]}
       >
         <Image
@@ -340,6 +351,16 @@ function Radio(props: ToggleInputProps) {
     innerStyle: $innerStyleOverride,
     detailStyle: $detailStyleOverride,
   } = props
+
+  const [opacity] = React.useState(new Animated.Value(0))
+
+  React.useEffect(() => {
+    Animated.timing(opacity, {
+      toValue: on ? 1 : 0,
+      duration: 300,
+      useNativeDriver: true,
+    }).start()
+  }, [on])
 
   const offBackgroundColor = [
     disabled && colors.palette.neutral400,
@@ -379,7 +400,7 @@ function Radio(props: ToggleInputProps) {
           $radioInner,
           { backgroundColor: onBackgroundColor },
           $innerStyleOverride,
-          useAnimatedStyle(() => ({ opacity: withTiming(on ? 1 : 0) }), [on]),
+          { opacity },
         ]}
       >
         <View
@@ -403,6 +424,29 @@ function Switch(props: ToggleInputProps) {
     innerStyle: $innerStyleOverride,
     detailStyle: $detailStyleOverride,
   } = props
+
+  const {
+    theme: { colors },
+    themed,
+  } = useAppTheme()
+  const animate = React.useRef(new Animated.Value(on ? 1 : 0)).current // Initial value is set based on isActive
+  const [opacity] = React.useState(new Animated.Value(0))
+
+  React.useEffect(() => {
+    Animated.timing(animate, {
+      toValue: on ? 1 : 0,
+      duration: 300,
+      useNativeDriver: true, // Enable native driver for smoother animations
+    }).start()
+  }, [on])
+
+  React.useEffect(() => {
+    Animated.timing(opacity, {
+      toValue: on ? 1 : 0,
+      duration: 300,
+      useNativeDriver: true,
+    }).start()
+  }, [on])
 
   const knobSizeFallback = 2
 
@@ -444,48 +488,41 @@ function Switch(props: ToggleInputProps) {
     }
   })()
 
-  const $animatedSwitchKnob = useAnimatedStyle(() => {
-    const offsetLeft = ($innerStyleOverride?.paddingStart ||
-      $innerStyleOverride?.paddingLeft ||
-      $switchInner?.paddingStart ||
-      $switchInner?.paddingLeft ||
-      0) as number
+  const rtlAdjustment = isRTL ? -1 : 1
+  const $themedSwitchInner = React.useMemo(() => themed($switchInner), [themed])
 
-    const offsetRight = ($innerStyleOverride?.paddingEnd ||
-      $innerStyleOverride?.paddingRight ||
-      $switchInner?.paddingEnd ||
-      $switchInner?.paddingRight ||
-      0) as number
+  const offsetLeft = ($innerStyleOverride?.paddingStart ||
+    $innerStyleOverride?.paddingLeft ||
+    $themedSwitchInner?.paddingStart ||
+    $themedSwitchInner?.paddingLeft ||
+    0) as number
 
-    // For RTL support:
-    // - web flip input range to [1,0]
-    // - outputRange doesn't want rtlAdjustment
-    const rtlAdjustment = isRTL ? -1 : 1
-    const inputRange = Platform.OS === "web" ? (isRTL ? [1, 0] : [0, 1]) : [0, 1]
-    const outputRange =
-      Platform.OS === "web"
-        ? [offsetLeft, +(knobWidth || 0) + offsetRight]
-        : [rtlAdjustment * offsetLeft, rtlAdjustment * (+(knobWidth || 0) + offsetRight)]
+  const offsetRight = ($innerStyleOverride?.paddingEnd ||
+    $innerStyleOverride?.paddingRight ||
+    $themedSwitchInner?.paddingEnd ||
+    $themedSwitchInner?.paddingRight ||
+    0) as number
 
-    const translateX = interpolate(on ? 1 : 0, inputRange, outputRange, Extrapolation.CLAMP)
+  const outputRange =
+    Platform.OS === "web"
+      ? isRTL
+        ? [+(knobWidth || 0) + offsetRight, offsetLeft]
+        : [offsetLeft, +(knobWidth || 0) + offsetRight]
+      : [rtlAdjustment * offsetLeft, rtlAdjustment * (+(knobWidth || 0) + offsetRight)]
 
-    return { transform: [{ translateX: withTiming(translateX) }] }
-  }, [on, knobWidth])
+  const $animatedSwitchKnob = animate.interpolate({
+    inputRange: [0, 1],
+    outputRange,
+  })
 
   return (
-    <View
-      style={[
-        $inputOuterVariants.switch,
-        { backgroundColor: offBackgroundColor },
-        $outerStyleOverride,
-      ]}
-    >
+    <View style={[$inputOuter, { backgroundColor: offBackgroundColor }, $outerStyleOverride]}>
       <Animated.View
         style={[
-          $switchInner,
+          $themedSwitchInner,
           { backgroundColor: onBackgroundColor },
           $innerStyleOverride,
-          useAnimatedStyle(() => ({ opacity: withTiming(on ? 1 : 0) }), [on]),
+          { opacity },
         ]}
       />
 
@@ -496,7 +533,7 @@ function Switch(props: ToggleInputProps) {
         style={[
           $switchDetail,
           $detailStyleOverride,
-          $animatedSwitchKnob,
+          { transform: [{ translateX: $animatedSwitchKnob }] },
           { width: knobWidth, height: knobHeight },
           { backgroundColor: knobBackgroundColor },
         ]}
@@ -566,17 +603,21 @@ function FieldLabel(props: BaseToggleProps) {
     labelPosition,
     labelStyle: $labelStyleOverride,
   } = props
+  const {
+    theme: { colors },
+    themed,
+  } = useAppTheme()
 
   if (!label && !labelTx && !LabelTextProps?.children) return null
 
-  const $labelStyle = [
+  const $labelStyle = themed([
     $label,
     status === "error" && { color: colors.error },
     labelPosition === "right" && $labelRight,
     labelPosition === "left" && $labelLeft,
     $labelStyleOverride,
     LabelTextProps?.style,
-  ]
+  ])
 
   return (
     <Text
@@ -641,7 +682,12 @@ const $radioDetail: ViewStyle = {
   borderRadius: 6,
 }
 
-const $switchInner: ViewStyle = {
+const $inputOuter: StyleProp<ViewStyle> = [
+  $inputOuterBase,
+  { height: 32, width: 56, borderRadius: 16, borderWidth: 0 },
+]
+
+const $switchInner: ThemedStyle<ViewStyle> = ({ colors }) => ({
   width: "100%",
   height: "100%",
   alignItems: "center",
@@ -650,29 +696,13 @@ const $switchInner: ViewStyle = {
   position: "absolute",
   paddingStart: 4,
   paddingEnd: 4,
-}
+})
 
 const $switchDetail: SwitchToggleProps["inputDetailStyle"] = {
   borderRadius: 12,
   position: "absolute",
   width: 24,
   height: 24,
-}
-
-const $helper: TextStyle = {
-  marginTop: spacing.xs,
-}
-
-const $label: TextStyle = {
-  flex: 1,
-}
-
-const $labelRight: TextStyle = {
-  marginStart: spacing.md,
-}
-
-const $labelLeft: TextStyle = {
-  marginEnd: spacing.md,
 }
 
 const $switchAccessibility: TextStyle = {
@@ -698,3 +728,19 @@ const $switchAccessibilityCircle: ViewStyle = {
   height: 12,
   borderRadius: 6,
 }
+
+const $helper: ThemedStyle<TextStyle> = ({ spacing }) => ({
+  marginTop: spacing.xs,
+})
+
+const $label: TextStyle = {
+  flex: 1,
+}
+
+const $labelRight: ThemedStyle<TextStyle> = ({ spacing }) => ({
+  marginStart: spacing.md,
+})
+
+const $labelLeft: ThemedStyle<TextStyle> = ({ spacing }) => ({
+  marginEnd: spacing.md,
+})
