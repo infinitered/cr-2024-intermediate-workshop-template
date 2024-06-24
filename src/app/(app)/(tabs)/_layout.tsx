@@ -5,14 +5,16 @@ import * as NavigationBar from "expo-navigation-bar"
 import { Icon } from "src/components"
 import { translate } from "src/i18n"
 import { colors, spacing, typography } from "src/theme"
-import { TextStyle, ViewStyle } from "react-native"
+import { Platform, TextStyle, ViewStyle } from "react-native"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
 
 export default observer(function Layout() {
   const { bottom } = useSafeAreaInsets()
 
   React.useEffect(() => {
-    NavigationBar.setBackgroundColorAsync(colors.background)
+    if (Platform.OS === "android") {
+      NavigationBar.setBackgroundColorAsync(colors.background)
+    }
   }, [])
 
   return (

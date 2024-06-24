@@ -1,7 +1,7 @@
 import { router } from "expo-router"
 import { observer } from "mobx-react-lite"
 import React, { ComponentType, useEffect, useMemo, useRef, useState } from "react"
-import { TextInput, TextStyle, ViewStyle } from "react-native"
+import { Platform, TextInput, TextStyle, ViewStyle } from "react-native"
 import * as NavigationBar from "expo-navigation-bar"
 import { Button, Icon, Screen, Text, TextField, TextFieldAccessoryProps } from "src/components"
 import { useStores } from "src/models"
@@ -19,7 +19,9 @@ export default observer(function Login(_props) {
   } = useStores()
 
   useEffect(() => {
-    NavigationBar.setBackgroundColorAsync(colors.background)
+    if (Platform.OS === "android") {
+      NavigationBar.setBackgroundColorAsync(colors.background)
+    }
     // Here is where you could fetch credentials from keychain or storage
     // and pre-fill the form fields.
     setAuthEmail("ignite@infinite.red")

@@ -2,7 +2,7 @@ import { router } from "expo-router"
 import { observer } from "mobx-react-lite"
 import React from "react"
 import * as NavigationBar from "expo-navigation-bar"
-import { Image, ImageStyle, TextStyle, View, ViewStyle } from "react-native"
+import { Image, ImageStyle, Platform, TextStyle, View, ViewStyle } from "react-native"
 import { Button, Text } from "src/components"
 import { isRTL } from "src/i18n"
 import { useStores } from "src/models"
@@ -31,7 +31,9 @@ export default observer(function WelcomeScreen() {
   )
 
   React.useEffect(() => {
-    NavigationBar.setBackgroundColorAsync(colors.palette.neutral100)
+    if (Platform.OS === "android") {
+      NavigationBar.setBackgroundColorAsync(colors.background)
+    }
   }, [])
 
   const $bottomContainerInsets = useSafeAreaInsetsStyle(["bottom"])
