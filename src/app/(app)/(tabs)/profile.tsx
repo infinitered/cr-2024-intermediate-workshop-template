@@ -12,7 +12,7 @@ export default observer(function ProfileScreen() {
     profileStore: { profile },
   } = useStores()
 
-  const { name, location, yoe, bio, openToWork, remote, rnFamiliarity, setProp } = profile
+  const { name, location, yoe, bio, openToWork, remote, skills, rnFamiliarity, setProp } = profile
 
   return (
     <Screen
@@ -93,7 +93,12 @@ export default observer(function ProfileScreen() {
         onPress={() => setProp("remote", !remote)}
       />
       <Text preset="formLabel" tx="demoProfileScreen.skills" />
-      <Text tx="demoProfileScreen.addMulti" disabled style={$textField} />
+      <TextField
+        value={skills}
+        containerStyle={$textField}
+        placeholderTx="demoProfileScreen.skills"
+        onChangeText={(text) => setProp("skills", text)}
+      />
       <TextField
         labelTx="demoProfileScreen.bio"
         containerStyle={$textField}
