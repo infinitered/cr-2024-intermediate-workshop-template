@@ -89,6 +89,13 @@ const en = {
     rnFamiliarity: "React Native Familiarity",
     skills: "Skills",
     addMulti: "Add code for multi-select here for developer to choose their skills",
+    familiaritySubtitles: {
+      0: "I've heard of it",
+      1: "I've played with it",
+      2: "I've built something",
+      3: "I've maintained a production app",
+      4: "I've written a book about it",
+    },
   },
   demoDebugScreen: {
     howTo: "HOW TO",
