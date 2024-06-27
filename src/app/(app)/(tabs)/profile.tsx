@@ -2,7 +2,7 @@ import Slider from "@react-native-community/slider"
 import { observer } from "mobx-react-lite"
 import React from "react"
 import { TextStyle, View, ViewStyle } from "react-native"
-import { Screen, Text, TextField, Toggle } from "src/components"
+import { Button, Screen, Text, TextField, Toggle } from "src/components"
 import { TxKeyPath } from "src/i18n"
 import { useStores } from "src/models"
 import { colors, spacing } from "src/theme"
@@ -107,12 +107,18 @@ export default observer(function ProfileScreen() {
         value={bio}
         onChangeText={(text) => setProp("bio", text)}
       />
+      <Button
+        tx="demoProfileScreen.submitButton"
+        preset="filled"
+        onPress={() => console.log("Validaiton done. Submitting to API.")}
+      />
     </Screen>
   )
 })
 
 const $container: ViewStyle = {
-  paddingBottom: spacing.xxl,
+  paddingTop: spacing.lg + spacing.xl,
+  paddingBottom: spacing.lg,
   paddingHorizontal: spacing.lg,
 }
 
