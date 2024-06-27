@@ -6,6 +6,7 @@ import { KeyboardProvider } from "react-native-keyboard-controller"
 import { GestureHandlerRootView } from "react-native-gesture-handler"
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet"
 import { ViewStyle } from "react-native"
+import { KeyboardProvider } from "react-native-keyboard-controller"
 
 SplashScreen.preventAutoHideAsync()
 
