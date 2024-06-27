@@ -1,164 +1,65 @@
-# Welcome to your new ignited app!
+# Intermediate Workshop - Chain React 2024
 
-[![CircleCI](https://circleci.com/gh/infinitered/ignite.svg?style=svg)](https://circleci.com/gh/infinitered/ignite)
+Template for the Chain React 2024 Intermediate Workshop. This is your starting point for the workshop!
 
-## The latest and greatest boilerplate for Infinite Red opinions
+You'll be integrating native code, addig native capabilities, and even writing a small amount of native code, so it's important to make sure your local native builds are working correctly.
 
-This is the boilerplate that [Infinite Red](https://infinite.red) uses as a way to test bleeding-edge changes to our React Native stack.
+The workshop is broken five modules, designed to help us bridge the last mobile mile, making our apps feel like a cohesive part of our users' phone experience:
+1. **Blending in with the surroundings**: dynamic text, dark mode, and more
+2. **The joy of inputting**: small-screen-optiized complex controls and keyboard interactions
+3. **Accessibility Timebox** ('nuff said!)
+4. **“I was just resting my thumb!”** - quick homescreen interactivity with Quick Actions
+5. **When an icon isn’t enough / Widgets :yellow_heart: apps** - build your own homescreen widgets and interact with them from your React Native app
 
-Currently includes:
+## How to get ready for the workshop.
 
-- React Native
-- React Navigation
-- MobX State Tree
-- TypeScript
-- And more!
+1. Fork and clone this repo. You'll start working right on `main`.
+2. Run `yarn` to restore your dependencies.
+3. Run `npx expo run:ios` to test on an iOS simulator.
+4. Run `npx expo run:android` to test on an Android emulator.
+5. If both of those work, then you're in great shape for the workshop.
 
-## Quick Start
+If something doesn't work, check the prerequisites below.
 
-The Ignite boilerplate project's structure will look similar to this:
+Generally, following the [Expo Local App Development requirements](https://docs.expo.dev/guides/local-app-development/) guide should be sufficient to get your Mac prepped for the workshop.
 
-```
-ignite-project
-├── app
-│   ├── components
-│   ├── config
-│   ├── i18n
-│   ├── models
-│   ├── navigators
-│   ├── screens
-│   ├── services
-│   ├── theme
-│   ├── utils
-│   └── app.tsx
-├── assets
-│   ├── icons
-│   └── images
-├── test
-│   ├── __snapshots__
-│   ├── mockFile.ts
-│   └── setup.ts
-├── README.md
-├── android
-│   ├── app
-│   ├── build.gradle
-│   ├── gradle
-│   ├── gradle.properties
-│   ├── gradlew
-│   ├── gradlew.bat
-│   ├── keystores
-│   └── settings.gradle
-├── ignite
-│   └── templates
-|       |── app-icon
-│       ├── component
-│       ├── model
-│       ├── navigator
-│       └── screen
-├── index.js
-├── ios
-│   ├── IgniteProject
-│   ├── IgniteProject-tvOS
-│   ├── IgniteProject-tvOSTests
-│   ├── IgniteProject.xcodeproj
-│   └── IgniteProjectTests
-├── .env
-└── package.json
+### Just before the worshop...
 
-```
+Just before the workshop, we recommend syncing your fork to pull the latest upstream, just in case we make any changes or fixes later on. Then run the following to make sure everything is up-to-date:
 
-### ./app directory
+1. Run `yarn`
+2. Run `npx expo prebuild --clean` to sync any native project changes
+3. Run `npx expo run:ios`
+4. Run `npx expo run:android`
 
-Included in an Ignite boilerplate project is the `app` directory. This is a directory you would normally have to create when using vanilla React Native.
+## Prerequisites
 
-The inside of the `app` directory looks similar to the following:
+- A local development environment ready for native iOS and Android React Native / Expo development, capable of running the `npx expo run:ios` and `npx expo run:android`, including recent versions of:
+  - Xcode (version 15+)
+  - Watchman
+  - Cocoapods
+  - JDK 17
+  - Android Studio
+  - iOS simulator
+  - Android emulator
+  - If you're not sure if you have all of these or if you have the right versions, check the [Expo Local App Development requirements](https://docs.expo.dev/guides/local-app-development/) for details on how to install these tools in order to enable local native development with the Expo CLI.
+- Other general development tools:
+  - Node 18.
+  - Visual Studio Code
+  - Git (Github Desktop works great)
+- Hardware:
+  - A Mac is highly recommended for the full experience.
+    - The afternoon modules will have iOS-specific exercises. If a Mac isn't available to you, at least make sure your Android native setup is good. We may be able to help you make it through parts of the iOS exercises with EAS Build, provided you have an iOS device and paid Apple developer account.
+- Yarn
 
-```
-app
-├── components
-├── config
-├── i18n
-├── models
-├── navigators
-├── screens
-├── services
-├── theme
-├── utils
-└── app.tsx
-```
+**Want to run on a device?** We will be focusing on emulator/simulator usage during the workshop, as it's especially easier for iOS. If you want to do some or all of the workshop on a device, you can also test with `npx expo run:ios --device` and/or `npx expo run:android --device`. Some later sections of the workshop may not work on an iOS device without additional configuration.
 
-**components**
-This is where your reusable components live which help you build your screens.
+## Doing the workshop exercises
 
-**i18n**
-This is where your translations will live if you are using `react-native-i18n`.
+You'll start working on `main` on your fork of the starter template.
 
-**models**
-This is where your app's models will live. Each model has a directory which will contain the `mobx-state-tree` model file, test file, and any other supporting files like actions, types, etc.
+The lessons live in a [companion repo](https://github.com/infinitered/cr-2024-intermediate-workshop-lessons).
 
-**navigators**
-This is where your `react-navigation` navigators will live.
+> This link might not be available yet, but will be accessible just before the workshop.
 
-**screens**
-This is where your screen components will live. A screen is a React component which will take up the entire screen and be part of the navigation hierarchy. Each screen will have a directory containing the `.tsx` file, along with any assets or other helper files.
-
-**services**
-Any services that interface with the outside world will live here (think REST APIs, Push Notifications, etc.).
-
-**theme**
-Here lives the theme for your application, including spacing, colors, and typography.
-
-**utils**
-This is a great place to put miscellaneous helpers and utilities. Things like date helpers, formatters, etc. are often found here. However, it should only be used for things that are truly shared across your application. If a helper or utility is only used by a specific component or model, consider co-locating your helper with that component or model.
-
-**app.tsx** This is the entry point to your app. This is where you will find the main App component which renders the rest of the application.
-
-### ./assets directory
-
-This directory is designed to organize and store various assets, making it easy for you to manage and use them in your application. The assets are further categorized into subdirectories, including `icons` and `images`:
-
-```
-assets
-├── icons
-└── images
-```
-
-**icons**
-This is where your icon assets will live. These icons can be used for buttons, navigation elements, or any other UI components. The recommended format for icons is PNG, but other formats can be used as well.
-
-Ignite comes with a built-in `Icon` component. You can find detailed usage instructions in the [docs](https://github.com/infinitered/ignite/blob/master/docs/Components-Icon.md).
-
-**images**
-This is where your images will live, such as background images, logos, or any other graphics. You can use various formats such as PNG, JPEG, or GIF for your images.
-
-Another valuable built-in component within Ignite is the `AutoImage` component. You can find detailed usage instructions in the [docs](https://github.com/infinitered/ignite/blob/master/docs/Components-AutoImage.md).
-
-How to use your `icon` or `image` assets:
-
-```
-import { Image } from 'react-native';
-
-const MyComponent = () => {
-  return (
-    <Image source={require('../assets/images/my_image.png')} />
-  );
-};
-```
-
-### ./ignite directory
-
-The `ignite` directory stores all things Ignite, including CLI and boilerplate items. Here you will find templates you can customize to help you get started with React Native.
-
-### ./test directory
-
-This directory will hold your Jest configs and mocks.
-
-## Running Maestro end-to-end tests
-
-Follow our [Maestro Setup](https://ignitecookbook.com/docs/recipes/MaestroSetup) recipe from the [Ignite Cookbook](https://ignitecookbook.com/)!
-
-## Previous Boilerplates
-
-- [2018 aka Bowser](https://github.com/infinitered/ignite-bowser)
-- [2017 aka Andross](https://github.com/infinitered/ignite-andross)
-- [2016 aka Ignite 1.0](https://github.com/infinitered/ignite-ir-boilerplate-2016)
+You'll start on module `01`, then proceed to `02`, etc. Each module file has objectives, helpful resources, steps to follow, code to write. Of course, the teachers will be there to provide background and guide you through it.
