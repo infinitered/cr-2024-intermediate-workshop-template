@@ -12,8 +12,9 @@ import {
   View,
   ViewStyle,
 } from "react-native"
-import { colors } from "../theme"
+import { colors, spacing } from "../theme"
 import { ExtendedEdge, useSafeAreaInsetsStyle } from "../utils/useSafeAreaInsetsStyle"
+import { KeyboardAwareScrollView } from "react-native-keyboard-controller"
 
 interface BaseScreenProps {
   /**
@@ -194,7 +195,7 @@ function ScreenWithScrolling(props: ScreenProps) {
   useScrollToTop(ref)
 
   return (
-    <ScrollView
+    <KeyboardAwareScrollView
       {...{ keyboardShouldPersistTaps, scrollEnabled, ref }}
       {...ScrollViewProps}
       onLayout={(e) => {
@@ -211,9 +212,10 @@ function ScreenWithScrolling(props: ScreenProps) {
         ScrollViewProps?.contentContainerStyle,
         contentContainerStyle,
       ]}
+      bottomOffset={spacing.md}
     >
       {children}
-    </ScrollView>
+    </KeyboardAwareScrollView>
   )
 }
 
@@ -242,8 +244,9 @@ export function Screen(props: ScreenProps) {
       <StatusBar style={statusBarStyle} {...StatusBarProps} />
 
       <KeyboardAvoidingView
-        behavior={isIos ? "padding" : "height"}
+        behavior={isIos ? "padding" : undefined}
         keyboardVerticalOffset={keyboardOffset}
+        enabled={isNonScrolling(props.preset)}
         {...KeyboardAvoidingViewProps}
         style={[$keyboardAvoidingViewStyle, KeyboardAvoidingViewProps?.style]}
       >

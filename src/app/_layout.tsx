@@ -2,6 +2,7 @@
 import React from "react"
 import { Slot, SplashScreen } from "expo-router"
 import { useInitialRootStore } from "src/models"
+import { KeyboardProvider } from "react-native-keyboard-controller"
 
 SplashScreen.preventAutoHideAsync()
 
@@ -22,5 +23,9 @@ export default function Root() {
     return null
   }
 
-  return <Slot />
+  return (
+    <KeyboardProvider>
+      <Slot />
+    </KeyboardProvider>
+  )
 }
