@@ -96,6 +96,7 @@ const en = {
       3: "I've maintained a production app",
       4: "I've written a book about it",
     },
+    submitButton: "Submit",
   },
   demoDebugScreen: {
     howTo: "HOW TO",
