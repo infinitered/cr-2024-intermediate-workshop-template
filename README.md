@@ -25,7 +25,12 @@ Generally, following the [Expo Local App Development requirements](https://docs.
 
 ### Just before the worshop...
 
-Just before the workshop, we recommend syncing your fork to pull the latest upstream and running `yarn` again, just in case we make any changes or fixes later on.
+Just before the workshop, we recommend syncing your fork to pull the latest upstream, just in case we make any changes or fixes later on. Then run the following to make sure everything is up-to-date:
+
+1. Run `yarn`
+2. Run `npx expo prebuild --clean` to sync any native project changes
+3. Run `npx expo run:ios`
+4. Run `npx expo run:android`
 
 ## Prerequisites
 
