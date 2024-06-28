@@ -3,7 +3,7 @@ import { observer } from "mobx-react-lite"
 import React from "react"
 import { TextStyle, View, ViewStyle } from "react-native"
 import { Screen, Text, TextField, Toggle } from "src/components"
-import { TxKeyPath } from "src/i18n"
+import { TxKeyPath, translate } from "src/i18n"
 import { useStores } from "src/models"
 import { colors, spacing } from "src/theme"
 
@@ -21,7 +21,7 @@ export default observer(function ProfileScreen() {
       contentContainerStyle={$container}
       keyboardShouldPersistTaps="handled"
     >
-      <Text preset="heading" tx="demoProfileScreen.title" style={$title} />
+      <Text preset="heading" tx="demoProfileScreen.title" style={$title} accessibilityLabel="Developer profile, entry form" />
       <TextField
         labelTx="demoProfileScreen.name"
         containerStyle={$textField}
@@ -37,48 +37,58 @@ export default observer(function ProfileScreen() {
         onChangeText={(text) => setProp("location", text)}
       />
       <TextField
+        accessibilityLabel="Years of experience, text input, numeric value"
         labelTx="demoProfileScreen.yoe"
         containerStyle={$textField}
         keyboardType="number-pad"
         placeholderTx="demoProfileScreen.yoe"
+        accessibilityHint="accepts number"
         value={yoe}
         onChangeText={(text) => setProp("yoe", text)}
       />
       <Text
+        accessibilityLabel=""
+        accessibilityElementsHidden
         preset="formLabel"
+        nativeID="sliderLabel"
         tx="demoProfileScreen.rnFamiliarity"
         style={{ marginBottom: spacing.xs }}
       />
-      <Text
-        tx={`demoProfileScreen.familiaritySubtitles.${rnFamiliarity}` as TxKeyPath}
-        style={$familiaritySubtitle}
-      />
-      <Slider
-        minimumValue={0}
-        maximumValue={4}
-        minimumTrackTintColor={colors.tint}
-        maximumTrackTintColor={colors.palette.secondary500}
-        tapToSeek
-        step={1}
-        value={rnFamiliarity}
-        onValueChange={(value) => setProp("rnFamiliarity", value)}
-        style={$slider}
-        renderStepNumber
-        StepMarker={({ stepMarked }) => (
-          <View
-            style={[
-              $stepMarkerStyle,
-              stepMarked && {
-                backgroundColor: colors.transparent,
-              },
-            ]}
-          />
-        )}
-      />
+        <Text
+          accessibilityElementsHidden
+          tx={`demoProfileScreen.familiaritySubtitles.${rnFamiliarity}` as TxKeyPath}
+          style={$familiaritySubtitle}
+        />
+        <Slider
+          accessibilityLabel="React Native Familiarity level, slider"
+          accessibilityIncrements={[0, 1, 2, 3, 4].map((i) => translate(`demoProfileScreen.familiaritySubtitles.${i}` as TxKeyPath))}
+          accessibilityUnits="level"
+          minimumValue={0}
+          maximumValue={4}
+          minimumTrackTintColor={colors.tint}
+          maximumTrackTintColor={colors.palette.secondary500}
+          tapToSeek
+          step={1}
+          value={rnFamiliarity}
+          onValueChange={(value) => setProp("rnFamiliarity", value)}
+          style={$slider}
+          renderStepNumber
+          StepMarker={({ stepMarked }) => (
+            <View
+              style={[
+                $stepMarkerStyle,
+                stepMarked && {
+                  backgroundColor: colors.transparent,
+                },
+              ]}
+            />
+          )}
+        />
 
       <Toggle
         labelTx="demoProfileScreen.job"
         variant="switch"
+        accessibilityRole="togglebutton"
         labelPosition="left"
         containerStyle={$textField}
         value={openToWork}
@@ -87,6 +97,7 @@ export default observer(function ProfileScreen() {
       <Toggle
         labelTx="demoProfileScreen.remote"
         variant="switch"
+        accessibilityRole="togglebutton"
         labelPosition="left"
         containerStyle={$textField}
         value={remote}
@@ -95,10 +106,10 @@ export default observer(function ProfileScreen() {
       <Text preset="formLabel" tx="demoProfileScreen.skills" />
       <Text tx="demoProfileScreen.addMulti" disabled style={$textField} />
       <TextField
+        accessibilityLabel="Bio, text input, multi-line"
         labelTx="demoProfileScreen.bio"
         containerStyle={$textField}
         multiline
-        placeholderTx="demoProfileScreen.bio"
         value={bio}
         onChangeText={(text) => setProp("bio", text)}
       />

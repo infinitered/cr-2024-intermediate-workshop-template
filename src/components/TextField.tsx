@@ -95,6 +95,8 @@ export interface TextFieldProps extends Omit<TextInputProps, "ref"> {
    * Note: It is a good idea to memoize this.
    */
   LeftAccessory?: ComponentType<TextFieldAccessoryProps>
+
+  accessibilityLabel?: string
 }
 
 /**
@@ -122,8 +124,10 @@ export const TextField = forwardRef(function TextField(props: TextFieldProps, re
     style: $inputStyleOverride,
     containerStyle: $containerStyleOverride,
     inputWrapperStyle: $inputWrapperStyleOverride,
+    accessibilityLabel,
     ...TextInputProps
   } = props
+
   const input = useRef<TextInput>(null)
 
   const disabled = TextInputProps.editable === false || status === "disabled"
@@ -179,6 +183,9 @@ export const TextField = forwardRef(function TextField(props: TextFieldProps, re
     >
       {!!(label || labelTx) && (
         <Text
+          accessibilityLabel=""
+          accessibilityElementsHidden
+          importantForAccessibility="no-hide-descendants"
           preset="formLabel"
           text={label}
           tx={labelTx}
@@ -199,6 +206,9 @@ export const TextField = forwardRef(function TextField(props: TextFieldProps, re
         )}
 
         <TextInput
+          accessibilityLabel={`${
+            accessibilityLabel || (labelTx ? translate(labelTx!, labelTxOptions) + ", text input" : "")
+          }`}
           ref={input}
           underlineColorAndroid={colors.transparent}
           textAlignVertical="top"

@@ -54,7 +54,7 @@ export default observer(function Layout() {
       <Tabs.Screen
         name="podcasts"
         options={{
-          tabBarAccessibilityLabel: translate("demoNavigator.podcastListTab"),
+          // tabBarAccessibilityLabel: translate("demoNavigator.podcastListTab"),
           tabBarLabel: translate("demoNavigator.podcastListTab"),
           tabBarIcon: ({ focused }) => (
             <Icon icon="podcast" color={focused ? colors.tint : undefined} size={30} />
