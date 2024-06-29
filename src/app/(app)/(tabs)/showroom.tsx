@@ -128,7 +128,7 @@ export default function DemoShowroomScreen() {
       open={open}
       onOpen={() => setOpen(true)}
       onClose={() => setOpen(false)}
-      drawerType={"slide"}
+      drawerType="back"
       drawerPosition={isRTL ? "right" : "left"}
       renderDrawerContent={() => (
         <View style={[$drawer, $drawerInsets]}>
