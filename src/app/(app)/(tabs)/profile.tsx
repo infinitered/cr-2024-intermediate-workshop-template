@@ -6,21 +6,26 @@ import { Screen, Text, TextField, Toggle } from "src/components"
 import { TxKeyPath } from "src/i18n"
 import { useStores } from "src/models"
 import { colors, spacing } from "src/theme"
+import { useHeader } from "src/utils/useHeader"
 
 export default observer(function ProfileScreen() {
   const {
     profileStore: { profile },
+    authenticationStore: { logout },
   } = useStores()
+
+  useHeader(
+    {
+      rightTx: "common.logOut",
+      onRightPress: logout,
+    },
+    [logout],
+  )
 
   const { name, location, yoe, bio, openToWork, remote, rnFamiliarity, setProp } = profile
 
   return (
-    <Screen
-      preset="scroll"
-      safeAreaEdges={["top"]}
-      contentContainerStyle={$container}
-      keyboardShouldPersistTaps="handled"
-    >
+    <Screen preset="scroll" contentContainerStyle={$container} keyboardShouldPersistTaps="handled">
       <Text preset="heading" tx="demoProfileScreen.title" style={$title} />
       <TextField
         labelTx="demoProfileScreen.name"
@@ -107,7 +112,6 @@ export default observer(function ProfileScreen() {
 })
 
 const $container: ViewStyle = {
-  paddingTop: spacing.lg + spacing.xl,
   paddingBottom: spacing.xxl,
   paddingHorizontal: spacing.lg,
 }
