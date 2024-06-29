@@ -77,7 +77,7 @@ export default observer(function Login(_props) {
       contentContainerStyle={$screenContentContainer}
       safeAreaEdges={["top", "bottom"]}
     >
-      <Text testID="login-heading" tx="loginScreen.signIn" preset="heading" style={$signIn} />
+      <Text testID="login-heading" tx="loginScreen.logIn" preset="heading" style={$signIn} />
       <Text tx="loginScreen.enterDetails" preset="subheading" style={$enterDetails} />
       {attemptsCount > 2 && <Text tx="loginScreen.hint" size="sm" weight="light" style={$hint} />}
 
@@ -113,7 +113,7 @@ export default observer(function Login(_props) {
 
       <Button
         testID="login-button"
-        tx="loginScreen.tapToSignIn"
+        tx="loginScreen.tapToLogIn"
         style={$tapButton}
         preset="reversed"
         onPress={login}
