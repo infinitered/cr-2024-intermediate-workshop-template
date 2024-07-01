@@ -12,6 +12,7 @@ import { Button } from "./Button"
 import { Icon } from "./Icon"
 import { ListItem } from "./ListItem"
 import { TextField, TextFieldProps } from "./TextField"
+import { observer } from "mobx-react-lite"
 
 export interface SelectFieldProps
   extends Omit<TextFieldProps, "ref" | "onValueChange" | "onChange" | "value"> {
@@ -30,100 +31,99 @@ function without<T>(array: T[], value: T) {
   return array.filter((v) => v !== value)
 }
 
-export const SelectField = forwardRef(function SelectField(
-  props: SelectFieldProps,
-  ref: Ref<SelectFieldRef>,
-) {
-  const {
-    value = [],
-    onSelect,
-    renderValue,
-    options = [],
-    multiple = true,
-    ...TextFieldProps
-  } = props
-  const sheet = useRef<BottomSheetModal>(null)
-  const { bottom } = useSafeAreaInsets()
+export const SelectField = observer(
+  forwardRef(function SelectField(props: SelectFieldProps, ref: Ref<SelectFieldRef>) {
+    const {
+      value = [],
+      onSelect,
+      renderValue,
+      options = [],
+      multiple = true,
+      ...TextFieldProps
+    } = props
+    const sheet = useRef<BottomSheetModal>(null)
+    const { bottom } = useSafeAreaInsets()
 
-  const disabled = TextFieldProps.editable === false || TextFieldProps.status === "disabled"
+    const disabled = TextFieldProps.editable === false || TextFieldProps.status === "disabled"
 
-  useImperativeHandle(ref, () => ({ presentOptions, dismissOptions }))
+    useImperativeHandle(ref, () => ({ presentOptions, dismissOptions }))
 
-  const valueString =
-    renderValue?.(value) ??
-    value
-      .map((v) => options.find((o) => o.value === v)?.label)
-      .filter(Boolean)
-      .join(", ")
+    const valueString =
+      renderValue?.(value) ??
+      value
+        .map((v) => options.find((o) => o.value === v)?.label)
+        .filter(Boolean)
+        .join(", ")
 
-  function presentOptions() {
-    if (disabled) return
+    function presentOptions() {
+      if (disabled) return
 
-    sheet.current?.present()
-  }
-
-  function dismissOptions() {
-    sheet.current?.dismiss()
-  }
-
-  function updateValue(optionValue: string) {
-    if (value.includes(optionValue)) {
-      onSelect?.(multiple ? without(value, optionValue) : [])
-    } else {
-      onSelect?.(multiple ? [...value, optionValue] : [optionValue])
-      if (!multiple) dismissOptions()
+      sheet.current?.present()
     }
-  }
 
-  return (
-    <>
-      <TouchableOpacity activeOpacity={1} onPress={presentOptions}>
-        <View pointerEvents="none">
-          <TextField
-            {...TextFieldProps}
-            value={valueString}
-            RightAccessory={(props) => <Icon icon="caretRight" containerStyle={props.style} />}
-          />
-        </View>
-      </TouchableOpacity>
+    function dismissOptions() {
+      sheet.current?.dismiss()
+    }
 
-      <BottomSheetModal
-        ref={sheet}
-        snapPoints={["50%"]}
-        stackBehavior="replace"
-        enableDismissOnClose
-        backdropComponent={(props) => (
-          <BottomSheetBackdrop {...props} appearsOnIndex={0} disappearsOnIndex={-1} />
-        )}
-        footerComponent={
-          !multiple
-            ? undefined
-            : (props) => (
-                <BottomSheetFooter {...props} style={$bottomSheetFooter} bottomInset={bottom}>
-                  <Button text="Dismiss" preset="reversed" onPress={dismissOptions} />
-                </BottomSheetFooter>
-              )
-        }
-      >
-        <BottomSheetFlatList
-          style={{ marginBottom: bottom + (multiple ? 56 : 0) }}
-          data={options}
-          keyExtractor={(o) => o.value}
-          renderItem={({ item, index }) => (
-            <ListItem
-              text={item.label}
-              topSeparator={index !== 0}
-              style={$listItem}
-              rightIcon={value.includes(item.value) ? "check" : undefined}
-              rightIconColor={colors.palette.angry500}
-              onPress={() => updateValue(item.value)}
+    function updateValue(optionValue: string) {
+      if (value.includes(optionValue)) {
+        onSelect?.(multiple ? without(value, optionValue) : [])
+      } else {
+        onSelect?.(multiple ? [...value, optionValue] : [optionValue])
+        if (!multiple) dismissOptions()
+      }
+    }
+
+    return (
+      <>
+        <TouchableOpacity activeOpacity={1} onPress={presentOptions}>
+          <View pointerEvents="none">
+            <TextField
+              {...TextFieldProps}
+              value={valueString}
+              RightAccessory={(props) => <Icon icon="caretRight" containerStyle={props.style} />}
             />
+          </View>
+        </TouchableOpacity>
+
+        <BottomSheetModal
+          ref={sheet}
+          snapPoints={["50%"]}
+          stackBehavior="replace"
+          enableDismissOnClose
+          backdropComponent={(props) => (
+            <BottomSheetBackdrop {...props} appearsOnIndex={0} disappearsOnIndex={-1} />
           )}
-        />
-      </BottomSheetModal>
-    </>
-  )
-})
+          footerComponent={
+            !multiple
+              ? undefined
+              : (props) => (
+                  <BottomSheetFooter {...props} style={$bottomSheetFooter} bottomInset={bottom}>
+                    <Button text="Save" preset="reversed" onPress={dismissOptions} />
+                  </BottomSheetFooter>
+                )
+          }
+        >
+          <BottomSheetFlatList
+            style={{ marginBottom: bottom + (multiple ? 56 : 0) }}
+            data={options}
+            keyExtractor={(o) => o.value}
+            renderItem={({ item, index }) => (
+              <ListItem
+                text={item.label}
+                topSeparator={index !== 0}
+                style={$listItem}
+                rightIcon={value.includes(item.value) ? "check" : undefined}
+                rightIconColor={colors.palette.angry500}
+                onPress={() => updateValue(item.value)}
+              />
+            )}
+          />
+        </BottomSheetModal>
+      </>
+    )
+  }),
+)
 
 const $bottomSheetFooter: ViewStyle = {
   paddingHorizontal: spacing.lg,

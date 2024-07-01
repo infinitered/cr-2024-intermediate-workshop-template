@@ -13,7 +13,7 @@ export const ProfileModel = types
     bio: "",
     openToWork: types.optional(types.boolean, false),
     remote: types.optional(types.boolean, false),
-    skills: "",
+    skills: types.optional(types.array(types.string), []),
     rnFamiliarity: types.optional(types.number, 0),
   })
   .actions(withSetPropAction)

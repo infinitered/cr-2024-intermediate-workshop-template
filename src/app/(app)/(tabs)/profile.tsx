@@ -2,11 +2,52 @@ import Slider from "@react-native-community/slider"
 import { observer } from "mobx-react-lite"
 import React from "react"
 import { TextStyle, View, ViewStyle } from "react-native"
-import { Button, Screen, Text, TextField, Toggle } from "src/components"
+import { Button, Screen, SelectField, Text, TextField, Toggle } from "src/components"
 import { TxKeyPath } from "src/i18n"
 import { useStores } from "src/models"
 import { colors, spacing } from "src/theme"
 import { useHeader } from "src/utils/useHeader"
+
+const skillsList: {
+  label: string
+  value: string
+}[] = [
+  { label: "JavaScript", value: "js" },
+  { label: "React Native", value: "react_native" },
+  { label: "Redux", value: "redux" },
+  { label: "TypeScript", value: "typescript" },
+  { label: "API Integration", value: "api_integration" },
+  { label: "RESTful Services", value: "restful_services" },
+  { label: "GraphQL", value: "graphql" },
+  { label: "Node.js", value: "node_js" },
+  { label: "Firebase", value: "firebase" },
+  { label: "AWS", value: "aws" },
+  { label: "Google Cloud", value: "google_cloud" },
+  { label: "CI/CD", value: "ci_cd" },
+  { label: "Jest", value: "jest" },
+  { label: "Mocha", value: "mocha" },
+  { label: "Enzyme", value: "enzyme" },
+  { label: "Unit Testing", value: "unit_testing" },
+  { label: "Integration Testing", value: "integration_testing" },
+  { label: "UI/UX Design", value: "ui_ux_design" },
+  { label: "Agile Methodologies", value: "agile_methodologies" },
+  { label: "Scrum", value: "scrum" },
+  { label: "React Navigation", value: "react_navigation" },
+  { label: "Expo", value: "expo" },
+  { label: "Expo CLI", value: "expo_cli" },
+  { label: "Expo SDK", value: "expo_sdk" },
+  { label: "Styled Components", value: "styled_components" },
+  { label: "Reanimated", value: "reanimated" },
+  { label: "Native Base", value: "native_base" },
+  { label: "React Native Paper", value: "react_native_paper" },
+  { label: "React Native Elements", value: "react_native_elements" },
+  { label: "React Native Vector Icons", value: "react_native_vector_icons" },
+  { label: "Lottie", value: "lottie" },
+  { label: "React Native Maps", value: "react_native_maps" },
+  { label: "CodePush", value: "codepush" },
+  { label: "Fastlane", value: "fastlane" },
+  { label: "Realm", value: "realm" },
+].sort((a, b) => a.label.localeCompare(b.label))
 
 export default observer(function ProfileScreen() {
   const {
@@ -97,12 +138,13 @@ export default observer(function ProfileScreen() {
         value={remote}
         onPress={() => setProp("remote", !remote)}
       />
-      <Text preset="formLabel" tx="demoProfileScreen.skills" />
-      <TextField
+      <SelectField
+        options={skillsList}
+        labelTx="demoProfileScreen.skills"
+        helper="Select your skills"
+        onSelect={(selected) => setProp("skills", selected)}
         value={skills}
-        containerStyle={$textField}
-        placeholderTx="demoProfileScreen.skills"
-        onChangeText={(text) => setProp("skills", text)}
+        renderValue={(value) => `${value.length} skills selected`}
       />
       <TextField
         labelTx="demoProfileScreen.bio"
