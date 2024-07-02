@@ -15,6 +15,7 @@ export const ProfileModel = types
     remote: types.optional(types.boolean, false),
     skills: "",
     rnFamiliarity: types.optional(types.number, 0),
+    darkMode: types.optional(types.boolean, false),
   })
   .actions(withSetPropAction)
 

@@ -84,6 +84,7 @@ const en = {
     location: "Location",
     job: "Looking for a job?",
     remote: "Remote only?",
+    darkMode: "Prefer dark mode?",
     bio: "Bio",
     yoe: "Years of Experience",
     rnFamiliarity: "React Native Familiarity",

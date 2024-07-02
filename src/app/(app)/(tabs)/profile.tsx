@@ -22,7 +22,8 @@ export default observer(function ProfileScreen() {
     [logout],
   )
 
-  const { name, location, yoe, bio, openToWork, remote, skills, rnFamiliarity, setProp } = profile
+  const { name, location, yoe, bio, openToWork, remote, darkMode, skills, rnFamiliarity, setProp } =
+    profile
 
   return (
     <Screen preset="scroll" contentContainerStyle={$container} keyboardShouldPersistTaps="handled">
@@ -97,6 +98,14 @@ export default observer(function ProfileScreen() {
         value={remote}
         onPress={() => setProp("remote", !remote)}
       />
+      <Toggle
+        labelTx="demoProfileScreen.darkMode"
+        variant="switch"
+        labelPosition="left"
+        containerStyle={$textField}
+        value={darkMode}
+        onPress={() => setProp("darkMode", !darkMode)}
+      />
       <Text preset="formLabel" tx="demoProfileScreen.skills" />
       <TextField
         value={skills}
@@ -115,7 +124,7 @@ export default observer(function ProfileScreen() {
       <Button
         tx="demoProfileScreen.submitButton"
         preset="filled"
-        onPress={() => console.log("Validaiton done. Submitting to API.")}
+        onPress={() => console.log("Validation done. Submitting to API.")}
       />
     </Screen>
   )
