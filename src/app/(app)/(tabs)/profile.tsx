@@ -12,7 +12,7 @@ const skillsList: {
   label: string
   value: string
 }[] = [
-  { label: "JavaScript", value: "js" },
+  { label: "JavaScript", value: "javascript" },
   { label: "React Native", value: "react_native" },
   { label: "Redux", value: "redux" },
   { label: "TypeScript", value: "typescript" },
