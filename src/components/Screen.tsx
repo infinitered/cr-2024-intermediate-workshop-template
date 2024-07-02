@@ -195,29 +195,27 @@ function ScreenWithScrolling(props: ScreenProps) {
   useScrollToTop(ref)
 
   return (
-    <>
-      <KeyboardAwareScrollView
-        {...{ keyboardShouldPersistTaps, scrollEnabled, ref }}
-        {...ScrollViewProps}
-        onLayout={(e) => {
-          onLayout(e)
-          ScrollViewProps?.onLayout?.(e)
-        }}
-        onContentSizeChange={(w: number, h: number) => {
-          onContentSizeChange(w, h)
-          ScrollViewProps?.onContentSizeChange?.(w, h)
-        }}
-        style={[$outerStyle, ScrollViewProps?.style, style]}
-        contentContainerStyle={[
-          $innerStyle,
-          ScrollViewProps?.contentContainerStyle,
-          contentContainerStyle,
-        ]}
-        bottomOffset={spacing.md}
-      >
-        {children}
-      </KeyboardAwareScrollView>
-    </>
+    <KeyboardAwareScrollView
+      {...{ keyboardShouldPersistTaps, scrollEnabled, ref }}
+      {...ScrollViewProps}
+      onLayout={(e) => {
+        onLayout(e)
+        ScrollViewProps?.onLayout?.(e)
+      }}
+      onContentSizeChange={(w: number, h: number) => {
+        onContentSizeChange(w, h)
+        ScrollViewProps?.onContentSizeChange?.(w, h)
+      }}
+      style={[$outerStyle, ScrollViewProps?.style, style]}
+      contentContainerStyle={[
+        $innerStyle,
+        ScrollViewProps?.contentContainerStyle,
+        contentContainerStyle,
+      ]}
+      bottomOffset={spacing.md}
+    >
+      {children}
+    </KeyboardAwareScrollView>
   )
 }
 
