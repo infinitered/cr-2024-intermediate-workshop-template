@@ -122,7 +122,6 @@ export default observer(function ProfileScreen() {
 })
 
 const $container: ViewStyle = {
-  paddingTop: spacing.lg + spacing.xl,
   paddingBottom: spacing.lg,
   paddingHorizontal: spacing.lg,
 }
