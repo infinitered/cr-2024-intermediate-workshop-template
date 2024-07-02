@@ -14,7 +14,7 @@ import {
 } from "react-native"
 import { colors, spacing } from "../theme"
 import { ExtendedEdge, useSafeAreaInsetsStyle } from "../utils/useSafeAreaInsetsStyle"
-import { KeyboardAwareScrollView, KeyboardToolbar } from "react-native-keyboard-controller"
+import { KeyboardAwareScrollView } from "react-native-keyboard-controller"
 
 interface BaseScreenProps {
   /**
@@ -217,7 +217,6 @@ function ScreenWithScrolling(props: ScreenProps) {
       >
         {children}
       </KeyboardAwareScrollView>
-      <KeyboardToolbar />
     </>
   )
 }

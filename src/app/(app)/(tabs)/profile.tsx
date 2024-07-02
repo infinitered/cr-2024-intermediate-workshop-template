@@ -1,7 +1,9 @@
 import Slider from "@react-native-community/slider"
+import { t } from "i18n-js"
 import { observer } from "mobx-react-lite"
 import React from "react"
 import { TextStyle, View, ViewStyle } from "react-native"
+import { KeyboardToolbar } from "react-native-keyboard-controller"
 import { Button, Screen, SelectField, Text, TextField, Toggle } from "src/components"
 import { TxKeyPath } from "src/i18n"
 import { useStores } from "src/models"
@@ -66,100 +68,107 @@ export default observer(function ProfileScreen() {
   const { name, location, yoe, bio, openToWork, remote, skills, rnFamiliarity, setProp } = profile
 
   return (
-    <Screen preset="scroll" contentContainerStyle={$container} keyboardShouldPersistTaps="handled">
-      <Text preset="heading" tx="demoProfileScreen.title" style={$title} />
-      <TextField
-        labelTx="demoProfileScreen.name"
-        containerStyle={$textField}
-        placeholderTx="demoProfileScreen.name"
-        value={name}
-        onChangeText={(text) => setProp("name", text)}
-      />
-      <TextField
-        labelTx="demoProfileScreen.location"
-        containerStyle={$textField}
-        placeholderTx="demoProfileScreen.location"
-        value={location}
-        onChangeText={(text) => setProp("location", text)}
-      />
-      <TextField
-        labelTx="demoProfileScreen.yoe"
-        containerStyle={$textField}
-        keyboardType="number-pad"
-        placeholderTx="demoProfileScreen.yoe"
-        value={yoe}
-        onChangeText={(text) => setProp("yoe", text)}
-      />
-      <Text
-        preset="formLabel"
-        tx="demoProfileScreen.rnFamiliarity"
-        style={{ marginBottom: spacing.xs }}
-      />
-      <Text
-        tx={`demoProfileScreen.familiaritySubtitles.${rnFamiliarity}` as TxKeyPath}
-        style={$familiaritySubtitle}
-      />
-      <Slider
-        minimumValue={0}
-        maximumValue={4}
-        minimumTrackTintColor={colors.tint}
-        maximumTrackTintColor={colors.palette.secondary500}
-        tapToSeek
-        step={1}
-        value={rnFamiliarity}
-        onValueChange={(value) => setProp("rnFamiliarity", value)}
-        style={$slider}
-        renderStepNumber
-        StepMarker={({ stepMarked }) => (
-          <View
-            style={[
-              $stepMarkerStyle,
-              stepMarked && {
-                backgroundColor: colors.transparent,
-              },
-            ]}
-          />
-        )}
-      />
+    <>
+      <Screen
+        preset="scroll"
+        contentContainerStyle={$container}
+        keyboardShouldPersistTaps="handled"
+      >
+        <Text preset="heading" tx="demoProfileScreen.title" style={$title} />
+        <TextField
+          labelTx="demoProfileScreen.name"
+          containerStyle={$textField}
+          placeholderTx="demoProfileScreen.name"
+          value={name}
+          onChangeText={(text) => setProp("name", text)}
+        />
+        <TextField
+          labelTx="demoProfileScreen.location"
+          containerStyle={$textField}
+          placeholderTx="demoProfileScreen.location"
+          value={location}
+          onChangeText={(text) => setProp("location", text)}
+        />
+        <TextField
+          labelTx="demoProfileScreen.yoe"
+          containerStyle={$textField}
+          keyboardType="number-pad"
+          placeholderTx="demoProfileScreen.yoe"
+          value={yoe}
+          onChangeText={(text) => setProp("yoe", text)}
+        />
+        <Text
+          preset="formLabel"
+          tx="demoProfileScreen.rnFamiliarity"
+          style={{ marginBottom: spacing.xs }}
+        />
+        <Text
+          tx={`demoProfileScreen.familiaritySubtitles.${rnFamiliarity}` as TxKeyPath}
+          style={$familiaritySubtitle}
+        />
+        <Slider
+          minimumValue={0}
+          maximumValue={4}
+          minimumTrackTintColor={colors.tint}
+          maximumTrackTintColor={colors.palette.secondary500}
+          tapToSeek
+          step={1}
+          value={rnFamiliarity}
+          onValueChange={(value) => setProp("rnFamiliarity", value)}
+          style={$slider}
+          renderStepNumber
+          StepMarker={({ stepMarked }) => (
+            <View
+              style={[
+                $stepMarkerStyle,
+                stepMarked && {
+                  backgroundColor: colors.transparent,
+                },
+              ]}
+            />
+          )}
+        />
 
-      <Toggle
-        labelTx="demoProfileScreen.job"
-        variant="switch"
-        labelPosition="left"
-        containerStyle={$textField}
-        value={openToWork}
-        onPress={() => setProp("openToWork", !openToWork)}
-      />
-      <Toggle
-        labelTx="demoProfileScreen.remote"
-        variant="switch"
-        labelPosition="left"
-        containerStyle={$textField}
-        value={remote}
-        onPress={() => setProp("remote", !remote)}
-      />
-      <SelectField
-        options={skillsList}
-        labelTx="demoProfileScreen.skills"
-        helper="Select your skills"
-        onSelect={(selected) => setProp("skills", selected)}
-        value={skills}
-        renderValue={(value) => `${value.length} skills selected`}
-      />
-      <TextField
-        labelTx="demoProfileScreen.bio"
-        containerStyle={$textField}
-        multiline
-        placeholderTx="demoProfileScreen.bio"
-        value={bio}
-        onChangeText={(text) => setProp("bio", text)}
-      />
-      <Button
-        tx="demoProfileScreen.submitButton"
-        preset="filled"
-        onPress={() => console.log("Validaiton done. Submitting to API.")}
-      />
-    </Screen>
+        <Toggle
+          labelTx="demoProfileScreen.job"
+          variant="switch"
+          labelPosition="left"
+          containerStyle={$textField}
+          value={openToWork}
+          onPress={() => setProp("openToWork", !openToWork)}
+        />
+        <Toggle
+          labelTx="demoProfileScreen.remote"
+          variant="switch"
+          labelPosition="left"
+          containerStyle={$textField}
+          value={remote}
+          onPress={() => setProp("remote", !remote)}
+        />
+        <SelectField
+          options={skillsList}
+          labelTx="demoProfileScreen.skills"
+          onSelect={(selected) => setProp("skills", selected)}
+          value={skills}
+          renderValue={(value) => t("demoProfileScreen.skillsSelected", { count: value.length })}
+          containerStyle={$textField}
+        />
+        <TextField
+          labelTx="demoProfileScreen.bio"
+          containerStyle={$textField}
+          multiline
+          placeholderTx="demoProfileScreen.bio"
+          value={bio}
+          onChangeText={(text) => setProp("bio", text)}
+        />
+        <Button
+          tx="demoProfileScreen.submitButton"
+          preset="filled"
+          onPress={() => console.log("Validaiton done. Submitting to API.")}
+        />
+      </Screen>
+      <KeyboardToolbar />
+    </>
   )
 })
 

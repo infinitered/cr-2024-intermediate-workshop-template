@@ -103,6 +103,7 @@ export const SelectField = observer(
               {...TextFieldProps}
               value={valueString}
               RightAccessory={(props) => <Icon icon="caretRight" containerStyle={props.style} />}
+              editable={false}
             />
           </View>
         </TouchableOpacity>
