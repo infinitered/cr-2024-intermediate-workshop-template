@@ -1,5 +1,6 @@
 import React, { ComponentType, forwardRef, Ref, useImperativeHandle, useRef } from "react"
 import {
+  Keyboard,
   StyleProp,
   TextInput,
   TextInputProps,
@@ -11,6 +12,7 @@ import {
 import { isRTL, translate } from "../i18n"
 import { colors, spacing, typography } from "../theme"
 import { Text, TextProps } from "./Text"
+import { TouchableWithoutFeedback } from "react-native-gesture-handler"
 
 export interface TextFieldAccessoryProps {
   style: StyleProp<any>
@@ -171,65 +173,67 @@ export const TextField = forwardRef(function TextField(props: TextFieldProps, re
   useImperativeHandle(ref, () => input.current as TextInput)
 
   return (
-    <TouchableOpacity
-      activeOpacity={1}
-      style={$containerStyles}
-      onPress={focusInput}
-      accessibilityState={{ disabled }}
-    >
-      {!!(label || labelTx) && (
-        <Text
-          preset="formLabel"
-          text={label}
-          tx={labelTx}
-          txOptions={labelTxOptions}
-          {...LabelTextProps}
-          style={$labelStyles}
-        />
-      )}
-
-      <View style={$inputWrapperStyles}>
-        {!!LeftAccessory && (
-          <LeftAccessory
-            style={$leftAccessoryStyle}
-            status={status}
-            editable={!disabled}
-            multiline={TextInputProps.multiline ?? false}
+    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+      <TouchableOpacity
+        activeOpacity={1}
+        style={$containerStyles}
+        onPress={focusInput}
+        accessibilityState={{ disabled }}
+      >
+        {!!(label || labelTx) && (
+          <Text
+            preset="formLabel"
+            text={label}
+            tx={labelTx}
+            txOptions={labelTxOptions}
+            {...LabelTextProps}
+            style={$labelStyles}
           />
         )}
 
-        <TextInput
-          ref={input}
-          underlineColorAndroid={colors.transparent}
-          textAlignVertical="top"
-          placeholder={placeholderContent}
-          placeholderTextColor={colors.textDim}
-          {...TextInputProps}
-          editable={!disabled}
-          style={$inputStyles}
-        />
+        <View style={$inputWrapperStyles}>
+          {!!LeftAccessory && (
+            <LeftAccessory
+              style={$leftAccessoryStyle}
+              status={status}
+              editable={!disabled}
+              multiline={TextInputProps.multiline ?? false}
+            />
+          )}
 
-        {!!RightAccessory && (
-          <RightAccessory
-            style={$rightAccessoryStyle}
-            status={status}
+          <TextInput
+            ref={input}
+            underlineColorAndroid={colors.transparent}
+            textAlignVertical="top"
+            placeholder={placeholderContent}
+            placeholderTextColor={colors.textDim}
+            {...TextInputProps}
             editable={!disabled}
-            multiline={TextInputProps.multiline ?? false}
+            style={$inputStyles}
+          />
+
+          {!!RightAccessory && (
+            <RightAccessory
+              style={$rightAccessoryStyle}
+              status={status}
+              editable={!disabled}
+              multiline={TextInputProps.multiline ?? false}
+            />
+          )}
+        </View>
+
+        {!!(helper || helperTx) && (
+          <Text
+            preset="formHelper"
+            text={helper}
+            tx={helperTx}
+            txOptions={helperTxOptions}
+            {...HelperTextProps}
+            style={$helperStyles}
           />
         )}
-      </View>
-
-      {!!(helper || helperTx) && (
-        <Text
-          preset="formHelper"
-          text={helper}
-          tx={helperTx}
-          txOptions={helperTxOptions}
-          {...HelperTextProps}
-          style={$helperStyles}
-        />
-      )}
-    </TouchableOpacity>
+      </TouchableOpacity>
+    </TouchableWithoutFeedback>
   )
 })
 
