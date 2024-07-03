@@ -106,7 +106,7 @@ export const SelectField = forwardRef(function SelectField(
         }
       >
         <BottomSheetFlatList
-          style={{ marginBottom: bottom + (multiple ? 56 : 0) }}
+          style={{ marginBottom: bottom + (multiple ? spacing.xl * 2 : 0) }}
           data={options}
           keyExtractor={(o) => o.value}
           renderItem={({ item, index }) => (
@@ -127,6 +127,7 @@ export const SelectField = forwardRef(function SelectField(
 
 const $bottomSheetFooter: ViewStyle = {
   paddingHorizontal: spacing.lg,
+  paddingBottom: spacing.xs,
 }
 
 const $listItem: ViewStyle = {
