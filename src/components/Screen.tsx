@@ -12,7 +12,7 @@ import {
   View,
   ViewStyle,
 } from "react-native"
-import { colors, spacing } from "../theme"
+import { colors } from "../theme"
 import { ExtendedEdge, useSafeAreaInsetsStyle } from "../utils/useSafeAreaInsetsStyle"
 import { KeyboardAwareScrollView } from "react-native-keyboard-controller"
 
@@ -69,6 +69,7 @@ interface ScrollScreenProps extends BaseScreenProps {
    * Pass any additional props directly to the ScrollView component.
    */
   ScrollViewProps?: ScrollViewProps
+  bottomOffset?: number
 }
 
 interface AutoScreenProps extends Omit<ScrollScreenProps, "preset"> {
@@ -184,6 +185,7 @@ function ScreenWithScrolling(props: ScreenProps) {
     contentContainerStyle,
     ScrollViewProps,
     style,
+    bottomOffset = 0,
   } = props as ScrollScreenProps
 
   const ref = useRef<ScrollView>(null)
@@ -212,7 +214,7 @@ function ScreenWithScrolling(props: ScreenProps) {
         ScrollViewProps?.contentContainerStyle,
         contentContainerStyle,
       ]}
-      bottomOffset={spacing.md}
+      bottomOffset={bottomOffset}
     >
       {children}
     </KeyboardAwareScrollView>

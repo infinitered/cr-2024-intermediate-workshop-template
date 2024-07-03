@@ -5,7 +5,7 @@ import {
   BottomSheetModal,
 } from "@gorhom/bottom-sheet"
 import React, { forwardRef, Ref, useImperativeHandle, useRef } from "react"
-import { TouchableOpacity, View, ViewStyle } from "react-native"
+import { Keyboard, TouchableOpacity, View, ViewStyle } from "react-native"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
 import { colors, spacing } from "../theme"
 import { Button } from "./Button"
@@ -67,6 +67,7 @@ export const SelectField = observer(
 
     function presentOptions() {
       if (disabled) return
+      Keyboard.dismiss()
 
       sheet.current?.present()
     }

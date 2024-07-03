@@ -9,7 +9,7 @@ export const ProfileModel = types
   .props({
     name: "",
     location: "",
-    yoe: "0",
+    yoe: "",
     bio: "",
     openToWork: types.optional(types.boolean, false),
     remote: types.optional(types.boolean, false),
