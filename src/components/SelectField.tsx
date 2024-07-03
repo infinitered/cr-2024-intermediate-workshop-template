@@ -14,6 +14,7 @@ import { ListItem } from "./ListItem"
 import { TextField, TextFieldProps } from "./TextField"
 import { observer } from "mobx-react-lite"
 import { FontAwesome6 } from "@expo/vector-icons"
+import { KeyboardToolbar } from "react-native-keyboard-controller"
 
 export interface SelectFieldProps
   extends Omit<TextFieldProps, "ref" | "onValueChange" | "onChange" | "value"> {
@@ -55,6 +56,7 @@ export const SelectField = observer(
     const disabled = TextFieldProps.editable === false || TextFieldProps.status === "disabled"
 
     const [searchValue, setSearchValue] = React.useState("")
+    const [bottomPadding, setBottomPadding] = React.useState(0)
 
     useImperativeHandle(ref, () => ({ presentOptions, dismissOptions }))
 
@@ -136,8 +138,9 @@ export const SelectField = observer(
           <BottomSheetFlatList
             style={{
               marginTop: searchable ? top : undefined,
-              marginBottom: bottom + (multiple ? 56 : 0),
+              marginBottom: bottom + spacing.xl * 2 + spacing.md,
             }}
+            contentContainerStyle={{ paddingBottom: bottomPadding }}
             data={filteredOptions}
             keyExtractor={(o) => o.value}
             renderItem={({ item, index }) => (
@@ -154,9 +157,10 @@ export const SelectField = observer(
             ListHeaderComponent={
               searchable ? (
                 <TextField
-                  autoFocus
                   value={searchValue}
                   onChangeText={updateSearchValue}
+                  onFocus={() => setBottomPadding(275)}
+                  onBlur={() => setBottomPadding(0)}
                   containerStyle={$searchContainer}
                   RightAccessory={() => {
                     return searchValue ? (
@@ -179,6 +183,7 @@ export const SelectField = observer(
             }
             stickyHeaderIndices={searchable ? [0] : undefined}
           />
+          <KeyboardToolbar showArrows={false} />
         </BottomSheetModal>
       </>
     )
@@ -187,6 +192,7 @@ export const SelectField = observer(
 
 const $bottomSheetFooter: ViewStyle = {
   paddingHorizontal: spacing.lg,
+  paddingBottom: spacing.xs,
 }
 
 const $listItem: ViewStyle = {

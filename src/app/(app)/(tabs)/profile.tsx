@@ -153,6 +153,7 @@ export default observer(function ProfileScreen() {
           value={skills}
           renderValue={(value) => t("demoProfileScreen.skillsSelected", { count: value.length })}
           containerStyle={$textField}
+          searchable
         />
         <TextField
           labelTx="demoProfileScreen.bio"

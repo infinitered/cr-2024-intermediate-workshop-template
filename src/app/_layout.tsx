@@ -28,11 +28,11 @@ export default function Root() {
 
   return (
     <GestureHandlerRootView style={$root}>
-      <BottomSheetModalProvider>
-        <KeyboardProvider>
+      <KeyboardProvider>
+        <BottomSheetModalProvider>
           <Slot />
-        </KeyboardProvider>
-      </BottomSheetModalProvider>
+        </BottomSheetModalProvider>
+      </KeyboardProvider>
     </GestureHandlerRootView>
   )
 }
