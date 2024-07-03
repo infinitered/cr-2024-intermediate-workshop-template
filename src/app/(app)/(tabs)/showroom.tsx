@@ -1,24 +1,14 @@
 import React, { FC, useEffect, useRef, useState } from "react"
-import {
-  Image,
-  ImageStyle,
-  LayoutAnimation,
-  SectionList,
-  TextStyle,
-  View,
-  ViewStyle,
-} from "react-native"
+import { Image, ImageStyle, SectionList, TextStyle, View, ViewStyle } from "react-native"
 import { Drawer } from "react-native-drawer-layout"
 import { type ContentStyle } from "@shopify/flash-list"
-import { ListItem, ListView, ListViewRef, Screen, Text, Toggle } from "src/components"
+import { ListItem, ListView, ListViewRef, Screen, Text } from "src/components"
 import { isRTL } from "src/i18n"
 import { colors, spacing } from "src/theme"
 import { useSafeAreaInsetsStyle } from "src/utils/useSafeAreaInsetsStyle"
 import * as Demos from "src/components/Showroom/demos"
 import { DrawerIconButton } from "src/components/Showroom/DrawerIconButton"
 import { Link, useLocalSearchParams } from "expo-router"
-import { useAppTheme } from "src/utils/useAppTheme"
-import { translate } from "src/i18n/index"
 
 const logo = require("assets/images/logo.png")
 
@@ -66,8 +56,6 @@ export default function DemoShowroomScreen() {
   const timeout = useRef<ReturnType<typeof setTimeout>>()
   const listRef = useRef<SectionList>(null)
   const menuRef = useRef<ListViewRef<DemoListItem["item"]>>(null)
-
-  const { setThemeContextOverride, themeContext } = useAppTheme()
 
   const params = useLocalSearchParams<{
     sectionSlug?: string
@@ -133,11 +121,6 @@ export default function DemoShowroomScreen() {
     return () => timeout.current && clearTimeout(timeout.current)
   }, [])
 
-  const toggleTheme = React.useCallback(() => {
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut) // Animate the transition
-    setThemeContextOverride(themeContext === "dark" ? "light" : "dark")
-  }, [themeContext, setThemeContextOverride])
-
   const $drawerInsets = useSafeAreaInsetsStyle(["top"])
 
   return (
@@ -151,23 +134,6 @@ export default function DemoShowroomScreen() {
         <View style={[$drawer, $drawerInsets]}>
           <View style={$logoContainer}>
             <Image source={logo} style={$logoImage} />
-          </View>
-          <View>
-            <Toggle
-              label={`Theme: ${translate(
-                themeContext === "light"
-                  ? "demoShowroomScreen.lightMode"
-                  : "demoShowroomScreen.darkMode",
-              )}`}
-              value={themeContext === "dark"}
-              variant="switch"
-              labelPosition="left"
-              containerStyle={$themeContainer}
-              // value={jobToggle}
-              onPress={() => {
-                toggleTheme()
-              }}
-            />
           </View>
 
           <ListView<DemoListItem["item"]>
@@ -246,11 +212,9 @@ const $logoImage: ImageStyle = {
 
 const $logoContainer: ViewStyle = {
   alignSelf: "flex-start",
-  justifyContent: "space-between",
+  justifyContent: "center",
   height: 56,
-  width: "100%",
   paddingHorizontal: spacing.lg,
-  flexDirection: "row",
 }
 
 const $demoItemName: TextStyle = {
@@ -264,8 +228,4 @@ const $demoItemDescription: TextStyle = {
 
 const $demoUseCasesSpacer: ViewStyle = {
   paddingBottom: spacing.xxl,
-}
-
-const $themeContainer: ViewStyle = {
-  paddingHorizontal: spacing.lg,
 }
