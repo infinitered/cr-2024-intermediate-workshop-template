@@ -84,8 +84,19 @@ export default observer(function Login(_props) {
       contentContainerStyle={$screenContentContainer}
       safeAreaEdges={["top", "bottom"]}
     >
-      <Text testID="login-heading" tx="loginScreen.logIn" preset="heading" style={$signIn} />
-      <Text tx="loginScreen.enterDetails" preset="subheading" style={$enterDetails} />
+      <Text
+        testID="login-heading"
+        tx="loginScreen.logIn"
+        preset="heading"
+        style={$signIn}
+        allowFontScaling={false}
+      />
+      <Text
+        tx="loginScreen.enterDetails"
+        preset="subheading"
+        style={$enterDetails}
+        allowFontScaling={false}
+      />
       {attemptsCount > 2 && <Text tx="loginScreen.hint" size="sm" weight="light" style={$hint} />}
 
       <TextField
@@ -98,6 +109,8 @@ export default observer(function Login(_props) {
         keyboardType="email-address"
         labelTx="loginScreen.emailFieldLabel"
         placeholderTx="loginScreen.emailFieldPlaceholder"
+        LabelTextProps={{ maxFontSizeMultiplier: 2 }}
+        maxFontSizeMultiplier={2}
         helper={error}
         status={error ? "error" : undefined}
         onSubmitEditing={() => authPasswordInput.current?.focus()}
@@ -113,6 +126,8 @@ export default observer(function Login(_props) {
         autoCorrect={false}
         secureTextEntry={isAuthPasswordHidden}
         labelTx="loginScreen.passwordFieldLabel"
+        LabelTextProps={{ maxFontSizeMultiplier: 2 }}
+        maxFontSizeMultiplier={2}
         placeholderTx="loginScreen.passwordFieldPlaceholder"
         onSubmitEditing={login}
         RightAccessory={PasswordRightAccessory}
