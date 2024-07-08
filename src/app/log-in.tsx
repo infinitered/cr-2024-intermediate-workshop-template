@@ -15,7 +15,13 @@ export default observer(function Login(_props) {
   const [isSubmitted, setIsSubmitted] = useState(false)
   const [attemptsCount, setAttemptsCount] = useState(0)
   const {
-    authenticationStore: { authToken, authEmail, setAuthEmail, setAuthToken, validationError },
+    authenticationStore: {
+      isAuthenticated,
+      authEmail,
+      setAuthEmail,
+      setAuthToken,
+      validationError,
+    },
   } = useStores()
 
   useEffect(() => {
@@ -68,8 +74,8 @@ export default observer(function Login(_props) {
     [isAuthPasswordHidden],
   )
 
-  if (authToken) {
-    return <Redirect href="/(app)/(tabs)/showroom" />
+  if (isAuthenticated) {
+    return <Redirect href="/(app)" />
   }
 
   return (
