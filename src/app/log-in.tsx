@@ -1,4 +1,5 @@
 import { Redirect } from "expo-router"
+import * as Haptics from "expo-haptics"
 import { observer } from "mobx-react-lite"
 import React, { ComponentType, useEffect, useMemo, useRef, useState } from "react"
 import { Platform, TextInput, TextStyle, ViewStyle } from "react-native"
@@ -46,7 +47,10 @@ export default observer(function Login(_props) {
     setIsSubmitted(true)
     setAttemptsCount(attemptsCount + 1)
 
-    if (validationError) return
+    if (validationError) {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)
+      return
+    }
 
     // Make a request to your server to get an authentication token.
     // If successful, reset the fields and set the token.

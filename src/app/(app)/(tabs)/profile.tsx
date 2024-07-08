@@ -1,4 +1,5 @@
 import Slider from "@react-native-community/slider"
+import * as Haptics from "expo-haptics"
 import { observer } from "mobx-react-lite"
 import React from "react"
 import { TextStyle, View, ViewStyle } from "react-native"
@@ -67,7 +68,10 @@ export default observer(function ProfileScreen() {
         tapToSeek
         step={1}
         value={rnFamiliarity}
-        onValueChange={(value) => setProp("rnFamiliarity", value)}
+        onValueChange={(value) => {
+          Haptics.selectionAsync()
+          setProp("rnFamiliarity", value)
+        }}
         style={$slider}
         renderStepNumber
         StepMarker={({ stepMarked }) => (
