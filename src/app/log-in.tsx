@@ -1,4 +1,4 @@
-import { Redirect, router } from "expo-router"
+import { Redirect } from "expo-router"
 import { observer } from "mobx-react-lite"
 import React, { ComponentType, useEffect, useMemo, useRef, useState } from "react"
 import { Platform, TextInput, TextStyle, ViewStyle } from "react-native"
