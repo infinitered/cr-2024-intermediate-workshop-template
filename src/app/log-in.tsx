@@ -75,7 +75,7 @@ export default observer(function Login(_props) {
   )
 
   if (isAuthenticated) {
-    return <Redirect href="/(app)/(tabs)/showroom" />
+    return <Redirect href="/(app)" />
   }
 
   return (
