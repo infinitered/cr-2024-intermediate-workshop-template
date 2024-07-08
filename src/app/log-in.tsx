@@ -1,4 +1,4 @@
-import { router } from "expo-router"
+import { Redirect, router } from "expo-router"
 import { observer } from "mobx-react-lite"
 import React, { ComponentType, useEffect, useMemo, useRef, useState } from "react"
 import { Platform, TextInput, TextStyle, ViewStyle } from "react-native"
@@ -15,7 +15,7 @@ export default observer(function Login(_props) {
   const [isSubmitted, setIsSubmitted] = useState(false)
   const [attemptsCount, setAttemptsCount] = useState(0)
   const {
-    authenticationStore: { authEmail, setAuthEmail, setAuthToken, validationError },
+    authenticationStore: { authToken, authEmail, setAuthEmail, setAuthToken, validationError },
   } = useStores()
 
   useEffect(() => {
@@ -50,9 +50,6 @@ export default observer(function Login(_props) {
 
     // We'll mock this with a fake token.
     setAuthToken(String(Date.now()))
-
-    // navigate to the main screen
-    router.replace("/")
   }
 
   const PasswordRightAccessory: ComponentType<TextFieldAccessoryProps> = useMemo(
@@ -70,6 +67,10 @@ export default observer(function Login(_props) {
       },
     [isAuthPasswordHidden],
   )
+
+  if (authToken) {
+    return <Redirect href="/(app)/(tabs)/showroom" />
+  }
 
   return (
     <Screen
