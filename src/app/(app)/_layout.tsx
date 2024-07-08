@@ -9,11 +9,16 @@ import { useAppTheme, useThemeProvider } from "src/utils/useAppTheme"
 export default observer(function Layout() {
   const {
     authenticationStore: { isAuthenticated },
+    profileStore: {
+      profile: { darkMode },
+    },
   } = useStores()
   const {
     theme: { colors },
   } = useAppTheme()
-  const { themeScheme, setThemeContextOverride, ThemeProvider } = useThemeProvider()
+  const { themeScheme, setThemeContextOverride, ThemeProvider } = useThemeProvider(
+    darkMode ? "dark" : "light",
+  )
 
   const [fontsLoaded, fontError] = useFonts(customFontsToLoad)
 
