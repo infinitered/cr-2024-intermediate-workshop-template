@@ -2,11 +2,12 @@ import Slider from "@react-native-community/slider"
 import * as Haptics from "expo-haptics"
 import { observer } from "mobx-react-lite"
 import React from "react"
-import { TextStyle, View, ViewStyle } from "react-native"
+import { LayoutAnimation, TextStyle, View, ViewStyle } from "react-native"
 import { Button, Screen, Text, TextField, Toggle } from "src/components"
 import { TxKeyPath } from "src/i18n"
 import { useStores } from "src/models"
 import { colors, spacing } from "src/theme"
+import { useAppTheme } from "src/utils/useAppTheme"
 import { useHeader } from "src/utils/useHeader"
 
 export default observer(function ProfileScreen() {
@@ -14,6 +15,7 @@ export default observer(function ProfileScreen() {
     profileStore: { profile },
     authenticationStore: { logout },
   } = useStores()
+  const { setThemeContextOverride, themeContext } = useAppTheme()
 
   useHeader(
     {
@@ -25,6 +27,11 @@ export default observer(function ProfileScreen() {
 
   const { name, location, yoe, bio, openToWork, remote, darkMode, skills, rnFamiliarity, setProp } =
     profile
+
+  const toggleTheme = React.useCallback(() => {
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut) // Animate the transition
+    setThemeContextOverride(themeContext === "dark" ? "light" : "dark")
+  }, [themeContext, setThemeContextOverride])
 
   return (
     <Screen preset="scroll" contentContainerStyle={$container} keyboardShouldPersistTaps="handled">
@@ -107,8 +114,11 @@ export default observer(function ProfileScreen() {
         variant="switch"
         labelPosition="left"
         containerStyle={$textField}
-        value={darkMode}
-        onPress={() => setProp("darkMode", !darkMode)}
+        value={themeContext === "dark"}
+        onPress={() => {
+          setProp("darkMode", !darkMode)
+          toggleTheme()
+        }}
       />
       <Text preset="formLabel" tx="demoProfileScreen.skills" />
       <TextField
