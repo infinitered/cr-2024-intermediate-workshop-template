@@ -33,6 +33,10 @@ export interface ButtonProps extends PressableProps {
    */
   txOptions?: TextProps["txOptions"]
   /**
+   * Pass any additional props directly to the label Text component.
+   */
+  TextProps?: TextProps
+  /**
    * An optional style override useful for padding & margin.
    */
   style?: StyleProp<ViewStyle>
@@ -110,6 +114,7 @@ export function Button(props: ButtonProps) {
     LeftAccessory,
     disabled,
     disabledStyle: $disabledViewStyleOverride,
+    TextProps,
     ...rest
   } = props
 
@@ -155,7 +160,7 @@ export function Button(props: ButtonProps) {
             <LeftAccessory style={$leftAccessoryStyle} pressableState={state} disabled={disabled} />
           )}
 
-          <Text tx={tx} text={text} txOptions={txOptions} style={$textStyle(state)}>
+          <Text tx={tx} text={text} txOptions={txOptions} {...TextProps} style={$textStyle(state)}>
             {children}
           </Text>
 
