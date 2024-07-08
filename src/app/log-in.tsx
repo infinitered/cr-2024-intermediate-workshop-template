@@ -139,6 +139,7 @@ export default observer(function Login(_props) {
         style={$tapButton}
         preset="reversed"
         onPress={login}
+        TextProps={{ maxFontSizeMultiplier: 2 }}
       />
     </Screen>
   )
