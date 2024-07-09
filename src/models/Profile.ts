@@ -13,8 +13,9 @@ export const ProfileModel = types
     bio: "",
     openToWork: types.optional(types.boolean, false),
     remote: types.optional(types.boolean, false),
-    skills: types.array(types.string),
+    skills: "",
     rnFamiliarity: types.optional(types.number, 0),
+    darkMode: types.optional(types.boolean, false),
   })
   .actions(withSetPropAction)
 

@@ -2,22 +2,32 @@ import Slider from "@react-native-community/slider"
 import { observer } from "mobx-react-lite"
 import React from "react"
 import { TextStyle, View, ViewStyle } from "react-native"
-import { Screen, Text, TextField, Toggle } from "src/components"
+import { Button, Screen, Text, TextField, Toggle } from "src/components"
 import { TxKeyPath, translate } from "src/i18n"
 import { useStores } from "src/models"
 import { colors, spacing } from "src/theme"
+import { useHeader } from "src/utils/useHeader"
 
 export default observer(function ProfileScreen() {
   const {
     profileStore: { profile },
+    authenticationStore: { logout },
   } = useStores()
 
-  const { name, location, yoe, bio, openToWork, remote, rnFamiliarity, setProp } = profile
+  useHeader(
+    {
+      rightTx: "common.logOut",
+      onRightPress: logout,
+    },
+    [logout],
+  )
+
+  const { name, location, yoe, bio, openToWork, remote, darkMode, skills, rnFamiliarity, setProp } =
+    profile
 
   return (
     <Screen
       preset="scroll"
-      safeAreaEdges={["top"]}
       contentContainerStyle={$container}
       keyboardShouldPersistTaps="handled"
     >
@@ -103,8 +113,21 @@ export default observer(function ProfileScreen() {
         value={remote}
         onPress={() => setProp("remote", !remote)}
       />
+      <Toggle
+        labelTx="demoProfileScreen.darkMode"
+        variant="switch"
+        labelPosition="left"
+        containerStyle={$textField}
+        value={darkMode}
+        onPress={() => setProp("darkMode", !darkMode)}
+      />
       <Text preset="formLabel" tx="demoProfileScreen.skills" />
-      <Text tx="demoProfileScreen.addMulti" disabled style={$textField} />
+      <TextField
+        value={skills}
+        containerStyle={$textField}
+        placeholderTx="demoProfileScreen.skills"
+        onChangeText={(text) => setProp("skills", text)}
+      />
       <TextField
         accessibilityLabel="Bio, text input, multi-line"
         labelTx="demoProfileScreen.bio"
@@ -113,13 +136,17 @@ export default observer(function ProfileScreen() {
         value={bio}
         onChangeText={(text) => setProp("bio", text)}
       />
+      <Button
+        tx="demoProfileScreen.submitButton"
+        preset="filled"
+        onPress={() => console.log("Validation done. Submitting to API.")}
+      />
     </Screen>
   )
 })
 
 const $container: ViewStyle = {
-  paddingTop: spacing.lg + spacing.xl,
-  paddingBottom: spacing.xxl,
+  paddingBottom: spacing.lg,
   paddingHorizontal: spacing.lg,
 }
 

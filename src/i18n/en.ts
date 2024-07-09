@@ -31,14 +31,14 @@ const en = {
     invalidEmail: "Invalid email address.",
   },
   loginScreen: {
-    signIn: "Sign In",
+    logIn: "Log In",
     enterDetails:
       "Enter your details below to unlock top secret info. You'll never guess what we've got waiting. Or maybe you will; it's not rocket science here.",
     emailFieldLabel: "Email",
     passwordFieldLabel: "Password",
     emailFieldPlaceholder: "Enter your email address",
     passwordFieldPlaceholder: "Super secret password here",
-    tapToSignIn: "Tap to sign in!",
+    tapToLogIn: "Tap to log in!",
     hint: "Hint: you can use any email address and your favorite password :)",
   },
   demoNavigator: {
@@ -84,6 +84,7 @@ const en = {
     location: "Location",
     job: "Looking for a job?",
     remote: "Remote only?",
+    darkMode: "Prefer dark mode?",
     bio: "Bio",
     yoe: "Years of Experience",
     rnFamiliarity: "React Native Familiarity",
@@ -96,6 +97,7 @@ const en = {
       3: "I've maintained a production app",
       4: "I've written a book about it",
     },
+    submitButton: "Submit",
   },
   demoDebugScreen: {
     howTo: "HOW TO",
