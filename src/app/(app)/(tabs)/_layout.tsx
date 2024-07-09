@@ -8,6 +8,12 @@ import { colors, spacing, typography } from "src/theme"
 import { Platform, TextStyle, ViewStyle } from "react-native"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
 
+// eslint-disable-next-line camelcase
+export const unstable_settings = {
+  // Ensure any route can link back to `/`
+  initialRouteName: 'index',
+};
+
 export default observer(function Layout() {
   const { bottom } = useSafeAreaInsets()
 

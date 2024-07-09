@@ -4,6 +4,21 @@ import { Slot, SplashScreen } from "expo-router"
 import { useInitialRootStore } from "src/models"
 import { useFonts } from "@expo-google-fonts/space-grotesk"
 import { customFontsToLoad } from "src/theme"
+import * as QuickActions from "expo-quick-actions"
+
+QuickActions.setItems([
+  {
+    id: "0",
+    title: "Do something!",
+    subtitle: "It could be anything!",
+    icon: "heart",
+    params: { stuff: "whatever" },
+  },
+])
+
+const subscription = QuickActions.addListener((action) => {
+  console.log(action);
+})
 
 SplashScreen.preventAutoHideAsync()
 
