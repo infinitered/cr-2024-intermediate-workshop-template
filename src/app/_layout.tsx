@@ -1,6 +1,7 @@
 // app/_layout.tsx
 import React from "react"
 import { Slot, SplashScreen } from "expo-router"
+import { KeyboardProvider } from "react-native-keyboard-controller"
 import { useInitialRootStore } from "src/models"
 import { useFonts } from "@expo-google-fonts/space-grotesk"
 import { customFontsToLoad } from "src/theme"
