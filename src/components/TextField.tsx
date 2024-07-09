@@ -7,10 +7,12 @@ import {
   TouchableOpacity,
   View,
   ViewStyle,
+  Platform,
 } from "react-native"
 import { isRTL, translate } from "../i18n"
 import { colors, spacing, typography } from "../theme"
 import { Text, TextProps } from "./Text"
+import nextId from "react-id-generator";
 
 export interface TextFieldAccessoryProps {
   style: StyleProp<any>
@@ -174,6 +176,24 @@ export const TextField = forwardRef(function TextField(props: TextFieldProps, re
 
   useImperativeHandle(ref, () => input.current as TextInput)
 
+  const labelId = nextId()
+
+  const labelAccessibilityProps = Platform.OS === 'ios' ? {
+    accessibilityLabel:"",
+    accessibilityElementsHidden: true
+  } : {
+    nativeId: labelId,
+  }
+
+  const textInputAccessibilityProps = Platform.OS === 'ios' ? {
+    accessibilityLabel:`${
+      accessibilityLabel || (labelTx ? translate(labelTx!, labelTxOptions) + ", text input" : "")
+    }`
+  } : {
+    accessibilityLabel:"input",
+    accessibilityLabelledBy: labelId,
+  }
+
   return (
     <TouchableOpacity
       activeOpacity={1}
@@ -183,9 +203,7 @@ export const TextField = forwardRef(function TextField(props: TextFieldProps, re
     >
       {!!(label || labelTx) && (
         <Text
-          accessibilityLabel=""
-          accessibilityElementsHidden
-          importantForAccessibility="no-hide-descendants"
+          {...labelAccessibilityProps}
           preset="formLabel"
           text={label}
           tx={labelTx}
@@ -206,9 +224,7 @@ export const TextField = forwardRef(function TextField(props: TextFieldProps, re
         )}
 
         <TextInput
-          accessibilityLabel={`${
-            accessibilityLabel || (labelTx ? translate(labelTx!, labelTxOptions) + ", text input" : "")
-          }`}
+          {...textInputAccessibilityProps}
           ref={input}
           underlineColorAndroid={colors.transparent}
           textAlignVertical="top"
@@ -232,6 +248,7 @@ export const TextField = forwardRef(function TextField(props: TextFieldProps, re
       {!!(helper || helperTx) && (
         <Text
           preset="formHelper"
+          accessibilityLanguage="assertive"
           text={helper}
           tx={helperTx}
           txOptions={helperTxOptions}

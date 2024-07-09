@@ -1,7 +1,7 @@
 import Slider from "@react-native-community/slider"
 import { observer } from "mobx-react-lite"
 import React from "react"
-import { TextStyle, View, ViewStyle } from "react-native"
+import { TextStyle, View, ViewStyle, Platform } from "react-native"
 import { Button, Screen, Text, TextField, Toggle } from "src/components"
 import { TxKeyPath, translate } from "src/i18n"
 import { useStores } from "src/models"
@@ -38,6 +38,7 @@ export default observer(function ProfileScreen() {
         placeholderTx="demoProfileScreen.name"
         value={name}
         onChangeText={(text) => setProp("name", text)}
+        helper="blah"
       />
       <TextField
         labelTx="demoProfileScreen.location"
@@ -57,21 +58,23 @@ export default observer(function ProfileScreen() {
         onChangeText={(text) => setProp("yoe", text)}
       />
       <Text
-        accessibilityLabel=""
+        nativeID="sliderLabel"
+        accessibilityLabel={Platform.OS === 'ios'? "" : "React Native Familiarity level, set slider below from 0 to 4, 0 being a novice to 4 being a master of React Native."}
         accessibilityElementsHidden
         preset="formLabel"
-        nativeID="sliderLabel"
         tx="demoProfileScreen.rnFamiliarity"
         style={{ marginBottom: spacing.xs }}
       />
         <Text
           accessibilityElementsHidden
+          importantForAccessibility="no-hide-descendants"
           tx={`demoProfileScreen.familiaritySubtitles.${rnFamiliarity}` as TxKeyPath}
           style={$familiaritySubtitle}
+
         />
         <Slider
-          accessibilityLabel="React Native Familiarity level, slider"
-          accessibilityIncrements={[0, 1, 2, 3, 4].map((i) => translate(`demoProfileScreen.familiaritySubtitles.${i}` as TxKeyPath))}
+          accessibilityLabelledBy="sliderLabel"
+          accessibilityIncrements={Platform.OS === "ios" ? [0, 1, 2, 3, 4].map((i) => translate(`demoProfileScreen.familiaritySubtitles.${i}` as TxKeyPath)) : ["0","1","2","3","4"]}
           accessibilityUnits="level"
           minimumValue={0}
           maximumValue={4}
