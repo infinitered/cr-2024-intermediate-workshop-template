@@ -81,7 +81,7 @@ export default observer(function ProfileScreen() {
         preset="scroll"
         contentContainerStyle={$container}
         keyboardShouldPersistTaps="handled"
-        bottomOffset={spacing.md + 42}
+        bottomOffset={spacing.md + 42} // height of the toolbar + existing padding
       >
         <Text preset="heading" tx="demoProfileScreen.title" style={$title} />
         <TextField

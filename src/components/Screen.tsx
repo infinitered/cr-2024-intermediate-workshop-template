@@ -185,7 +185,7 @@ function ScreenWithScrolling(props: ScreenProps) {
     contentContainerStyle,
     ScrollViewProps,
     style,
-    bottomOffset,
+    bottomOffset = 0,
   } = props as ScrollScreenProps
 
   const ref = useRef<ScrollView>(null)
@@ -200,7 +200,7 @@ function ScreenWithScrolling(props: ScreenProps) {
     <KeyboardAwareScrollView
       {...{ keyboardShouldPersistTaps, scrollEnabled, ref }}
       {...ScrollViewProps}
-      bottomOffset={props.keyboardOffset}
+      bottomOffset={bottomOffset}
       onLayout={(e) => {
         onLayout(e)
         ScrollViewProps?.onLayout?.(e)
