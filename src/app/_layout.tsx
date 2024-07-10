@@ -4,6 +4,7 @@ import { Slot, SplashScreen } from "expo-router"
 import { useInitialRootStore } from "src/models"
 import { useFonts } from "@expo-google-fonts/space-grotesk"
 import { customFontsToLoad } from "src/theme"
+import { KeyboardProvider } from "react-native-keyboard-controller"
 
 SplashScreen.preventAutoHideAsync()
 
@@ -39,5 +40,9 @@ export default function Root() {
     return null
   }
 
-  return <Slot />
+  return (
+    <KeyboardProvider>
+      <Slot />
+    </KeyboardProvider>
+  )
 }

@@ -14,6 +14,7 @@ import {
 } from "react-native"
 import { ExtendedEdge, useSafeAreaInsetsStyle } from "../utils/useSafeAreaInsetsStyle"
 import { useAppTheme } from "src/utils/useAppTheme"
+import { KeyboardAwareScrollView } from "react-native-keyboard-controller"
 
 interface BaseScreenProps {
   /**
@@ -68,6 +69,7 @@ interface ScrollScreenProps extends BaseScreenProps {
    * Pass any additional props directly to the ScrollView component.
    */
   ScrollViewProps?: ScrollViewProps
+  bottomOffset?: number
 }
 
 interface AutoScreenProps extends Omit<ScrollScreenProps, "preset"> {
@@ -183,6 +185,7 @@ function ScreenWithScrolling(props: ScreenProps) {
     contentContainerStyle,
     ScrollViewProps,
     style,
+    bottomOffset,
   } = props as ScrollScreenProps
 
   const ref = useRef<ScrollView>(null)
@@ -194,7 +197,7 @@ function ScreenWithScrolling(props: ScreenProps) {
   useScrollToTop(ref)
 
   return (
-    <ScrollView
+    <KeyboardAwareScrollView
       {...{ keyboardShouldPersistTaps, scrollEnabled, ref }}
       {...ScrollViewProps}
       onLayout={(e) => {
@@ -211,9 +214,10 @@ function ScreenWithScrolling(props: ScreenProps) {
         ScrollViewProps?.contentContainerStyle,
         contentContainerStyle,
       ]}
+      bottomOffset={bottomOffset}
     >
       {children}
-    </ScrollView>
+    </KeyboardAwareScrollView>
   )
 }
 
@@ -255,10 +259,11 @@ export function Screen(props: ScreenProps) {
       />
 
       <KeyboardAvoidingView
-        behavior={isIos ? "padding" : "height"}
+        behavior={isIos ? "padding" : undefined}
         keyboardVerticalOffset={keyboardOffset}
         {...KeyboardAvoidingViewProps}
         style={[$keyboardAvoidingViewStyle, KeyboardAvoidingViewProps?.style]}
+        enabled={isNonScrolling(props.preset)}
       >
         {isNonScrolling(props.preset) ? (
           <ScreenWithoutScrolling {...props} />

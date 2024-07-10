@@ -34,7 +34,12 @@ export default observer(function ProfileScreen() {
   }, [themeContext, setThemeContextOverride])
 
   return (
-    <Screen preset="scroll" contentContainerStyle={$container} keyboardShouldPersistTaps="handled">
+    <Screen
+      preset="scroll"
+      contentContainerStyle={$container}
+      keyboardShouldPersistTaps="handled"
+      bottomOffset={spacing.md}
+    >
       <Text preset="heading" tx="demoProfileScreen.title" style={$title} />
       <TextField
         labelTx="demoProfileScreen.name"
