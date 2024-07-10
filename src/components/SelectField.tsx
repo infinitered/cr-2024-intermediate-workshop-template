@@ -4,8 +4,8 @@ import {
   BottomSheetFooter,
   BottomSheetModal,
 } from "@gorhom/bottom-sheet"
-import React, { forwardRef, Ref, useImperativeHandle, useRef } from "react"
-import { View, TouchableOpacity, ViewStyle } from "react-native"
+import React, { forwardRef, Ref, useImperativeHandle, useRef, useState } from "react"
+import { View, TouchableOpacity, ViewStyle, Keyboard } from "react-native"
 import { observer } from "mobx-react-lite"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
 import { colors, spacing } from "../theme"
@@ -13,6 +13,7 @@ import { Button } from "./Button"
 import { TextField, TextFieldProps } from "./TextField"
 import { Icon } from "./Icon"
 import { ListItem } from "./ListItem"
+import { KeyboardToolbar } from "react-native-keyboard-controller"
 
 function without<T>(array: T[], value: T) {
   return array.filter((v) => v !== value)
@@ -25,6 +26,8 @@ export interface SelectFieldProps
   onSelect?: (newValue: string[]) => void
   multiple?: boolean
   options: { label: string; value: string }[]
+  SearchFieldProps?: TextFieldProps
+  searchable?: boolean
 }
 export interface SelectFieldRef {
   presentOptions: () => void
@@ -39,11 +42,15 @@ export const SelectField = observer(
       onSelect,
       options = [],
       multiple = true,
+      searchable = false,
+      SearchFieldProps,
       ...TextFieldProps
     } = props
 
     const sheet = useRef<BottomSheetModal>(null)
     const { bottom } = useSafeAreaInsets()
+    const [searchValue, setSearchValue] = useState("")
+    const [paddingBottom, setPaddingBottom] = useState(0)
 
     const disabled = TextFieldProps.editable === false || TextFieldProps.status === "disabled"
 
@@ -58,10 +65,12 @@ export const SelectField = observer(
 
     function presentOptions() {
       if (disabled) return
+      Keyboard.dismiss()
       sheet.current?.present()
     }
 
     function dismissOptions() {
+      setSearchValue("")
       sheet.current?.dismiss()
     }
 
@@ -74,6 +83,11 @@ export const SelectField = observer(
       }
     }
 
+    // Filter options for partial name if searchable is true
+    const filteredOptions = searchable
+      ? options.filter((o) => o.label.toLowerCase().includes(searchValue.toLowerCase()))
+      : options
+
     return (
       <>
         <TouchableOpacity activeOpacity={1} onPress={presentOptions}>
@@ -82,17 +96,24 @@ export const SelectField = observer(
               {...TextFieldProps}
               RightAccessory={(props) => <Icon icon="caretRight" containerStyle={props.style} />}
               value={valueString}
+              editable={false}
             />
           </View>
         </TouchableOpacity>
         <BottomSheetModal
           ref={sheet}
-          snapPoints={["50%"]}
+          snapPoints={searchable ? ["94%"] : ["50%"]}
           stackBehavior="replace"
           enableDismissOnClose
           backdropComponent={(props) => (
-            <BottomSheetBackdrop {...props} appearsOnIndex={0} disappearsOnIndex={-1} />
+            <BottomSheetBackdrop
+              {...props}
+              appearsOnIndex={0}
+              disappearsOnIndex={-1}
+              onPress={() => setSearchValue("")}
+            />
           )}
+          onDismiss={dismissOptions}
           footerComponent={
             !multiple
               ? undefined
@@ -104,9 +125,35 @@ export const SelectField = observer(
           }
         >
           <BottomSheetFlatList
-            style={{ marginBottom: bottom + (multiple ? spacing.xl * 2 : 0) }}
-            data={options}
+            style={{
+              marginBottom: bottom + (multiple ? spacing.xl * 2 : 0),
+            }}
+            contentContainerStyle={{ paddingBottom }}
+            data={filteredOptions}
             keyExtractor={(o) => o.value}
+            ListHeaderComponent={
+              searchable ? (
+                <TextField
+                  value={searchValue}
+                  onChangeText={(searchInput) => setSearchValue(searchInput)}
+                  containerStyle={$searchContainer}
+                  onPress={() => setPaddingBottom(275)}
+                  onBlur={() => setPaddingBottom(0)}
+                  RightAccessory={() => {
+                    return searchValue ? (
+                      <TouchableOpacity
+                        style={$searchClearButton}
+                        onPress={() => setSearchValue("")}
+                      >
+                        <Icon icon="xCircle" color={colors.text} size={20} />
+                      </TouchableOpacity>
+                    ) : undefined
+                  }}
+                  {...SearchFieldProps}
+                />
+              ) : undefined
+            }
+            stickyHeaderIndices={searchable ? [0] : undefined}
             renderItem={({ item, index }) => (
               <ListItem
                 text={item.label}
@@ -119,6 +166,7 @@ export const SelectField = observer(
             )}
             keyboardShouldPersistTaps="always"
           />
+          <KeyboardToolbar showArrows={false} />
         </BottomSheetModal>
       </>
     )
@@ -132,4 +180,16 @@ const $bottomSheetFooter: ViewStyle = {
 
 const $listItem: ViewStyle = {
   paddingHorizontal: spacing.lg,
+}
+
+const $searchContainer: ViewStyle = {
+  paddingHorizontal: spacing.lg,
+}
+
+const $searchClearButton: ViewStyle = {
+  overflow: "hidden",
+  height: 40,
+  paddingHorizontal: spacing.xs,
+  alignContent: "center",
+  justifyContent: "center",
 }

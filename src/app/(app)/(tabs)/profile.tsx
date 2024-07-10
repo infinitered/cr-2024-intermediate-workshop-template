@@ -177,6 +177,7 @@ export default observer(function ProfileScreen() {
           renderValue={(value) =>
             translate("demoProfileScreen.skillsSelected", { count: value.length })
           }
+          searchable
         />
         <TextField
           labelTx="demoProfileScreen.bio"
