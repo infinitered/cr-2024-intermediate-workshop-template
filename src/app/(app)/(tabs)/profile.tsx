@@ -173,10 +173,10 @@ export default observer(function ProfileScreen() {
           labelTx="demoProfileScreen.skills"
           onSelect={(selected) => setProp("skills", selected)}
           value={skills}
-          containerStyle={$textField}
           renderValue={(value) =>
             translate("demoProfileScreen.skillsSelected", { count: value.length })
           }
+          containerStyle={$textField}
           searchable
         />
         <TextField

@@ -15,10 +15,6 @@ import { Icon } from "./Icon"
 import { ListItem } from "./ListItem"
 import { KeyboardToolbar } from "react-native-keyboard-controller"
 
-function without<T>(array: T[], value: T) {
-  return array.filter((v) => v !== value)
-}
-
 export interface SelectFieldProps
   extends Omit<TextFieldProps, "ref" | "onValueChange" | "onChange" | "value"> {
   value?: string[]
@@ -32,6 +28,10 @@ export interface SelectFieldProps
 export interface SelectFieldRef {
   presentOptions: () => void
   dismissOptions: () => void
+}
+
+function without<T>(array: T[], value: T) {
+  return array.filter((v) => v !== value)
 }
 
 export const SelectField = observer(
