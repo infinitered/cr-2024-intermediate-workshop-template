@@ -22,6 +22,9 @@ export interface SelectFieldProps
   onSelect?: (newValue: string[]) => void
   multiple?: boolean
   options: { label: string; value: string }[]
+  /**
+   * Pass any additional props directly to the search TextField component.
+   */
   SearchFieldProps?: TextFieldProps
   searchable?: boolean
 }
