@@ -89,6 +89,10 @@ const en = {
     yoe: "Years of Experience",
     rnFamiliarity: "React Native Familiarity",
     skills: "Skills",
+    skillsSelected: {
+      one: "{{count}} skill selected",
+      other: "{{count}} skills selected",
+    },
     addMulti: "Add code for multi-select here for developer to choose their skills",
     familiaritySubtitles: {
       0: "I've heard of it",

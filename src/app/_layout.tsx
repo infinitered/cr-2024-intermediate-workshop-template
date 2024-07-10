@@ -5,6 +5,8 @@ import { useInitialRootStore } from "src/models"
 import { useFonts } from "@expo-google-fonts/space-grotesk"
 import { customFontsToLoad } from "src/theme"
 import { KeyboardProvider } from "react-native-keyboard-controller"
+import { BottomSheetModalProvider } from "@gorhom/bottom-sheet"
+import { GestureHandlerRootView } from "react-native-gesture-handler"
 
 SplashScreen.preventAutoHideAsync()
 
@@ -41,8 +43,12 @@ export default function Root() {
   }
 
   return (
-    <KeyboardProvider>
-      <Slot />
-    </KeyboardProvider>
+    <GestureHandlerRootView>
+      <KeyboardProvider>
+        <BottomSheetModalProvider>
+          <Slot />
+        </BottomSheetModalProvider>
+      </KeyboardProvider>
+    </GestureHandlerRootView>
   )
 }
