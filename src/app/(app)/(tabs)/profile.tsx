@@ -2,7 +2,14 @@ import Slider from "@react-native-community/slider"
 import * as Haptics from "expo-haptics"
 import { observer } from "mobx-react-lite"
 import React from "react"
-import { LayoutAnimation, TextStyle, View, ViewStyle } from "react-native"
+import {
+  AccessibilityInfo,
+  LayoutAnimation,
+  Platform,
+  TextStyle,
+  View,
+  ViewStyle,
+} from "react-native"
 import { Button, Screen, SelectField, Text, TextField, Toggle } from "src/components"
 import { translate, TxKeyPath } from "src/i18n"
 import { useStores } from "src/models"
@@ -58,6 +65,7 @@ export default observer(function ProfileScreen() {
     authenticationStore: { logout },
   } = useStores()
   const { setThemeContextOverride, themeContext } = useAppTheme()
+  const [nameValidationText, setNameValidationText] = React.useState<string | undefined>(undefined)
 
   useHeader(
     {
@@ -83,13 +91,24 @@ export default observer(function ProfileScreen() {
         keyboardShouldPersistTaps="handled"
         bottomOffset={spacing.md + 42} // height of the toolbar + existing padding
       >
-        <Text preset="heading" tx="demoProfileScreen.title" style={$title} />
+        <Text
+          preset="heading"
+          tx="demoProfileScreen.title"
+          style={$title}
+          accessibilityLabel="Developer profile, entry form"
+        />
+        <Text
+          preset="bold"
+          text="Enter your developer profile to let us know what you'd like to work on and what React Native Radio episodes you'd like to hear"
+        />
         <TextField
           labelTx="demoProfileScreen.name"
           containerStyle={$textField}
           placeholderTx="demoProfileScreen.name"
           value={name}
           onChangeText={(text) => setProp("name", text)}
+          helper={nameValidationText}
+          status={nameValidationText ? "error" : undefined}
         />
         <TextField
           labelTx="demoProfileScreen.location"
@@ -99,6 +118,7 @@ export default observer(function ProfileScreen() {
           onChangeText={(text) => setProp("location", text)}
         />
         <TextField
+          accessibilityLabel="Years of experience, text input, numeric value"
           labelTx="demoProfileScreen.yoe"
           containerStyle={$textField}
           keyboardType="number-pad"
@@ -106,44 +126,62 @@ export default observer(function ProfileScreen() {
           value={yoe}
           onChangeText={(text) => setProp("yoe", text)}
         />
-        <Text
-          preset="formLabel"
-          tx="demoProfileScreen.rnFamiliarity"
-          style={{ marginBottom: spacing.xs }}
-        />
-        <Text
-          tx={`demoProfileScreen.familiaritySubtitles.${rnFamiliarity}` as TxKeyPath}
-          style={$familiaritySubtitle}
-        />
-        <Slider
-          minimumValue={0}
-          maximumValue={4}
-          minimumTrackTintColor={colors.tint}
-          maximumTrackTintColor={colors.palette.secondary500}
-          tapToSeek
-          step={1}
-          value={rnFamiliarity}
-          onValueChange={(value) => {
-            Haptics.selectionAsync()
-            setProp("rnFamiliarity", value)
-          }}
-          style={$slider}
-          renderStepNumber
-          StepMarker={({ stepMarked }) => (
-            <View
-              style={[
-                $stepMarkerStyle,
-                stepMarked && {
-                  backgroundColor: colors.transparent,
-                },
-              ]}
-            />
-          )}
-        />
+        <View accessible>
+          <Text
+            accessibilityLabel={
+              Platform.OS === "ios"
+                ? ""
+                : "React Native Familiarity level, set slider below from 0 to 4, 0 being a novice to 4 being a master of React Native."
+            }
+            preset="formLabel"
+            tx="demoProfileScreen.rnFamiliarity"
+            style={{ marginBottom: spacing.xs }}
+          />
+          <Text
+            importantForAccessibility="no-hide-descendants"
+            tx={`demoProfileScreen.familiaritySubtitles.${rnFamiliarity}` as TxKeyPath}
+            style={$familiaritySubtitle}
+          />
+          <Slider
+            minimumValue={0}
+            maximumValue={4}
+            minimumTrackTintColor={colors.tint}
+            maximumTrackTintColor={colors.palette.secondary500}
+            accessibilityLabel="React Native Familiarity level, slider"
+            accessibilityIncrements={
+              Platform.OS === "ios"
+                ? [0, 1, 2, 3, 4].map((i) =>
+                    translate(`demoProfileScreen.familiaritySubtitles.${i}` as TxKeyPath),
+                  )
+                : ["0", "1", "2", "3", "4"]
+            }
+            accessibilityUnits="level"
+            tapToSeek
+            step={1}
+            value={rnFamiliarity}
+            onValueChange={(value) => {
+              Haptics.selectionAsync()
+              setProp("rnFamiliarity", value)
+            }}
+            style={$slider}
+            renderStepNumber
+            StepMarker={({ stepMarked }) => (
+              <View
+                style={[
+                  $stepMarkerStyle,
+                  stepMarked && {
+                    backgroundColor: colors.transparent,
+                  },
+                ]}
+              />
+            )}
+          />
+        </View>
 
         <Toggle
           labelTx="demoProfileScreen.job"
           variant="switch"
+          accessibilityRole="togglebutton"
           labelPosition="left"
           containerStyle={$textField}
           value={openToWork}
@@ -160,6 +198,8 @@ export default observer(function ProfileScreen() {
         <Toggle
           labelTx="demoProfileScreen.darkMode"
           variant="switch"
+          accessibilityRole="togglebutton"
+          accessibilityValue={{ text: darkMode ? "On" : "Off" }}
           labelPosition="left"
           containerStyle={$textField}
           value={themeContext === "dark"}
@@ -180,17 +220,33 @@ export default observer(function ProfileScreen() {
           searchable
         />
         <TextField
+          accessibilityLabel="Bio, text input, multi-line"
           labelTx="demoProfileScreen.bio"
           containerStyle={$textField}
           multiline
-          placeholderTx="demoProfileScreen.bio"
           value={bio}
           onChangeText={(text) => setProp("bio", text)}
         />
         <Button
           tx="demoProfileScreen.submitButton"
           preset="filled"
-          onPress={() => console.log("Validation done. Submitting to API.")}
+          onPress={() => {
+            if (Platform.OS === "ios") {
+              if (name.trim() === "") {
+                AccessibilityInfo.announceForAccessibility("Submit failed. Name is required.")
+              } else {
+                console.log("Validation done. Submitting to API.")
+                AccessibilityInfo.announceForAccessibility("Submit successful. Profile is updated.")
+              }
+            } else if (Platform.OS === "android") {
+              if (name.trim() === "") {
+                setNameValidationText("Name is required")
+              } else {
+                console.log("Validation done. Submitting to API.")
+                setNameValidationText(undefined)
+              }
+            }
+          }}
         />
       </Screen>
       <KeyboardToolbar />

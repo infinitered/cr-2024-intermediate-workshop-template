@@ -1,5 +1,6 @@
 import React, { ComponentType, forwardRef, Ref, useImperativeHandle, useRef } from "react"
 import {
+  Platform,
   StyleProp,
   TextInput,
   TextInputProps,
@@ -8,6 +9,7 @@ import {
   View,
   ViewStyle,
 } from "react-native"
+import nextId from "react-id-generator"
 import { isRTL, translate } from "../i18n"
 import { colors, spacing, typography } from "../theme"
 import { Text, TextProps } from "./Text"
@@ -95,6 +97,7 @@ export interface TextFieldProps extends Omit<TextInputProps, "ref"> {
    * Note: It is a good idea to memoize this.
    */
   LeftAccessory?: ComponentType<TextFieldAccessoryProps>
+  accessibilityLabel?: string
 }
 
 /**
@@ -122,6 +125,7 @@ export const TextField = forwardRef(function TextField(props: TextFieldProps, re
     style: $inputStyleOverride,
     containerStyle: $containerStyleOverride,
     inputWrapperStyle: $inputWrapperStyleOverride,
+    accessibilityLabel,
     ...TextInputProps
   } = props
   const input = useRef<TextInput>(null)
@@ -170,6 +174,31 @@ export const TextField = forwardRef(function TextField(props: TextFieldProps, re
 
   useImperativeHandle(ref, () => input.current as TextInput)
 
+  const labelId = nextId()
+
+  const labelAccessibilityProps =
+    Platform.OS === "ios"
+      ? {
+          accessibilityLabel: "",
+          accessibilityElementsHidden: true,
+        }
+      : {
+          nativeId: labelId,
+        }
+
+  const textInputAccessibilityProps =
+    Platform.OS === "ios"
+      ? {
+          accessibilityLabel: `${
+            accessibilityLabel ||
+            (labelTx ? translate(labelTx!, labelTxOptions) + ", text input" : "")
+          }`,
+        }
+      : {
+          accessibilityLabel: "input",
+          accessibilityLabelledBy: labelId,
+        }
+
   return (
     <TouchableOpacity
       activeOpacity={1}
@@ -179,6 +208,7 @@ export const TextField = forwardRef(function TextField(props: TextFieldProps, re
     >
       {!!(label || labelTx) && (
         <Text
+          {...labelAccessibilityProps}
           preset="formLabel"
           text={label}
           tx={labelTx}
@@ -199,6 +229,7 @@ export const TextField = forwardRef(function TextField(props: TextFieldProps, re
         )}
 
         <TextInput
+          {...textInputAccessibilityProps}
           ref={input}
           underlineColorAndroid={colors.transparent}
           textAlignVertical="top"
@@ -221,6 +252,7 @@ export const TextField = forwardRef(function TextField(props: TextFieldProps, re
 
       {!!(helper || helperTx) && (
         <Text
+          accessibilityLanguage="assertive"
           preset="formHelper"
           text={helper}
           tx={helperTx}
