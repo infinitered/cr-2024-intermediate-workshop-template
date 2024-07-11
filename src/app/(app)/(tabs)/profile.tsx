@@ -209,6 +209,10 @@ export default observer(function ProfileScreen() {
           }}
         />
         <SelectField
+          BottomSheetModalProps={{
+            accessibilityLabel: "Skills selector full list. Select multiple",
+          }}
+          accessibilityLabel="Skills selector"
           options={skillsList}
           labelTx="demoProfileScreen.skills"
           onSelect={(selected) => setProp("skills", selected)}
