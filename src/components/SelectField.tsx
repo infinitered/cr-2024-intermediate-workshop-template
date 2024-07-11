@@ -129,6 +129,8 @@ export const SelectField = observer(
                   </BottomSheetFooter>
                 )
           }
+          accessibilityRole="list"
+          accessibilityValue={value ? {text: value.join(", ")}: undefined}
           {...BottomSheetModalProps}
         >
           <BottomSheetFlatList
