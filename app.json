@@ -17,9 +17,7 @@
       "fallbackToCacheTimeout": 0
     },
     "jsEngine": "hermes",
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "android": {
       "icon": "./assets/images/app-icon-android-legacy.png",
       "package": "com.cr2024im",
@@ -68,7 +66,22 @@
         }
       ],
       "expo-font",
-      "expo-router"
+      "expo-router",
+      [
+        "expo-quick-actions",
+        {
+          "androidIcons": {
+            "profile_icon": {
+              "foregroundImage": "./assets/icons/adaptive-icon-profile.png",
+              "backgroundColor": "#29cfc1"
+            },
+            "podcast_icon": {
+              "foregroundImage": "./assets/icons/adaptive-icon-podcast.png",
+              "backgroundColor": "#29cfc1"
+            }
+          }
+        }
+      ]
     ],
     "experiments": {
       "tsconfigPaths": true,
