@@ -2,7 +2,7 @@
   "name": "cr-2024-im",
   "version": "0.0.1",
   "private": true,
-  "main": "expo-router/entry",
+  "main": "src/main.tsx",
   "scripts": {
     "compile": "tsc --noEmit -p . --pretty",
     "format": "prettier --write \"src/**/*.{js,jsx,json,md,ts,tsx}\"",
