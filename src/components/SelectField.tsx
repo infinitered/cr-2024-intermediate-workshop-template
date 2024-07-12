@@ -3,6 +3,7 @@ import {
   BottomSheetFlatList,
   BottomSheetFooter,
   BottomSheetModal,
+  BottomSheetModalProps,
 } from "@gorhom/bottom-sheet"
 import React, { forwardRef, Ref, useImperativeHandle, useRef, useState } from "react"
 import { View, TouchableOpacity, ViewStyle, Keyboard } from "react-native"
@@ -26,6 +27,7 @@ export interface SelectFieldProps
    * Pass any additional props directly to the search TextField component.
    */
   SearchFieldProps?: TextFieldProps
+  BottomSheetModalProps?: Omit<BottomSheetModalProps, "children">
   searchable?: boolean
 }
 export interface SelectFieldRef {
@@ -47,6 +49,7 @@ export const SelectField = observer(
       multiple = true,
       searchable = false,
       SearchFieldProps,
+      BottomSheetModalProps,
       ...TextFieldProps
     } = props
 
@@ -126,6 +129,9 @@ export const SelectField = observer(
                   </BottomSheetFooter>
                 )
           }
+          accessibilityRole="list"
+          accessibilityValue={value ? {text: value.join(", ")}: undefined}
+          {...BottomSheetModalProps}
         >
           <BottomSheetFlatList
             style={{
