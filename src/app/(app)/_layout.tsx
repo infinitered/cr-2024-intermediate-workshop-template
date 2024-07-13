@@ -5,16 +5,16 @@ import * as QuickActions from "expo-quick-actions"
 import { useQuickActionRouting, RouterAction } from "expo-quick-actions/router"
 import { useStores } from "src/models"
 import { useThemeProvider } from "src/utils/useAppTheme"
-import { AppState.  Platform } from "react-native"
-import { updateEpisodesWidget } from "../../widgets/widget-refresher";
+import { AppState, Platform } from "react-native"
+import { updateEpisodesWidget } from "../../widgets/widget-refresher"
 
 export default observer(function Layout() {
   const {
     authenticationStore: { isAuthenticated },
     profileStore: {
       profile: { darkMode },
-      episodeStore,
     },
+    episodeStore,
   } = useStores()
 
   useQuickActionRouting()
@@ -41,14 +41,14 @@ export default observer(function Layout() {
   React.useEffect(() => {
     const subscription = AppState.addEventListener("change", (appState) => {
       if (appState === "active") {
-        updateEpisodesWidget(episodeStore.favorites.slice());
+        updateEpisodesWidget(episodeStore.favorites.slice())
       }
-    });
-  
+    })
+
     return () => {
-      subscription.remove();
-    };
-  }, []);
+      subscription.remove()
+    }
+  }, [])
 
   const { themeScheme, setThemeContextOverride, ThemeProvider } = useThemeProvider(
     darkMode ? "dark" : "light",
