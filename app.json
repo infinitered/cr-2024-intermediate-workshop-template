@@ -106,6 +106,12 @@
             }
           ]
         }
+      ],
+      [
+        "@bacons/apple-targets",
+        {
+          "appleTeamId": "XXXXXXXXX"
+        }
       ]
     ],
     "experiments": {
